@@ -120,13 +120,14 @@ html {
 
 /* Gradient text - Dynamic and impressive */
 .gradient-text {
-  background: linear-gradient(135deg, #ff6b9d, #ff91c7, #ffb3d9, #ffcce6, #ffb3e6, #ff91c7);
+  color: #e91e63; /* Fallback color for better visibility */
+  background: linear-gradient(135deg, #e91e63, #ff6b9d, #ff91c7, #ff6b9d, #e91e63);
   background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: gradient-shift 4s ease infinite;
-  filter: drop-shadow(0 0 20px rgba(255, 182, 193, 0.5));
+  filter: drop-shadow(0 1px 2px rgba(255, 182, 193, 0.4));
 }
 
 @keyframes gradient-shift {
@@ -134,19 +135,17 @@ html {
   50% { background-position: 100% 50%; }
 }
 
-/* Dynamic text glow */
+/* Dynamic text glow - Reduced blur for clarity */
 @keyframes text-glow {
   0%, 100% {
     text-shadow: 
-      0 0 10px rgba(255, 182, 193, 0.5),
-      0 0 20px rgba(255, 182, 193, 0.3),
-      0 0 30px rgba(255, 192, 203, 0.2);
+      0 0 2px rgba(255, 182, 193, 0.6),
+      0 0 4px rgba(255, 182, 193, 0.4);
   }
   50% {
     text-shadow: 
-      0 0 20px rgba(255, 182, 193, 0.8),
-      0 0 40px rgba(255, 182, 193, 0.5),
-      0 0 60px rgba(255, 192, 203, 0.3);
+      0 0 4px rgba(255, 182, 193, 0.8),
+      0 0 8px rgba(255, 182, 193, 0.5);
   }
 }
 
@@ -154,11 +153,10 @@ html {
   animation: text-glow 3s ease-in-out infinite;
 }
 
-/* Soft glow effect */
+/* Soft glow effect - Reduced blur for clarity */
 .neon-glow {
-  text-shadow: 0 2px 8px rgba(255, 182, 193, 0.4),
-               0 4px 16px rgba(255, 182, 193, 0.2),
-               0 6px 24px rgba(255, 192, 203, 0.1);
+  text-shadow: 0 1px 3px rgba(255, 182, 193, 0.5),
+               0 2px 6px rgba(255, 182, 193, 0.3);
 }
 
 /* Dynamic gradient backgrounds */

@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-const SONG_URL =
-  "https://cdn.pixabay.com/download/audio/2022/03/24/audio_5e3d32c093.mp3?filename=romantic-love-story-11286.mp3";
+const SONG_URL = "/Audio/audio_1.ogg";
 
 export function AmbientAudioToggle() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -44,12 +43,12 @@ export function AmbientAudioToggle() {
       transition={{ delay: 0.6 }}
       onClick={togglePlayback}
       disabled={!isReady}
-      className="fixed top-6 right-6 z-30 flex items-center gap-3 rounded-full bg-white/90 px-4 py-2 text-rose-700 shadow-lg backdrop-blur transition hover:scale-105 disabled:cursor-not-allowed"
+      className="fixed top-6 right-6 z-30 flex items-center gap-3 rounded-full bg-white px-4 py-2 text-rose-700 shadow-xl border-2 border-rose-300/60 backdrop-blur-sm transition hover:scale-105 disabled:cursor-not-allowed font-semibold"
     >
       <span className="h-3 w-3 rounded-full bg-blush-500 shadow-inner">
         {isPlaying && <span className="sr-only">Playing</span>}
       </span>
-      {isPlaying ? "Pause our song" : "Play our song"}
+      {isPlaying ? "Pause this" : "Play this"}
     </motion.button>
   );
 }

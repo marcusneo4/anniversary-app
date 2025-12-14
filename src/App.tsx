@@ -24,6 +24,7 @@ import { Floating3DElements } from "./components/Floating3DElements";
 import { CinematicSection } from "./components/CinematicSection";
 import { PastelDecorations } from "./components/PastelDecorations";
 import { CursorTrail } from "./components/CursorTrail";
+import { LoveLetter } from "./components/LoveLetter";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function App() {
@@ -52,12 +53,15 @@ export default function App() {
               onSecondaryClick={() => setActiveTab("puzzle")}
             />
             <CinematicSection>
+              <LoveLetter />
+            </CinematicSection>
+            <CinematicSection>
               <div className="text-center py-24 px-4">
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  className="text-xs uppercase tracking-[0.5em] text-pink-400 font-semibold mb-6 modern-subheadline"
+                  className="text-xs uppercase tracking-[0.5em] text-pink-600 font-semibold mb-6 modern-subheadline drop-shadow-sm"
                 >
                   Our Journey
                 </motion.p>
@@ -66,7 +70,7 @@ export default function App() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 }}
-                  className="font-bold text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-700 modern-headline mb-8 gradient-text neon-glow"
+                  className="font-bold text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-800 modern-headline mb-8 gradient-text neon-glow"
                 >
                   Every Moment<br />Matters
                 </motion.h2>
@@ -75,14 +79,14 @@ export default function App() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  className="text-lg md:text-xl lg:text-2xl text-gray-600 modern-body max-w-3xl mx-auto leading-relaxed"
+                  className="text-lg md:text-xl lg:text-2xl text-gray-800 modern-body max-w-3xl mx-auto leading-relaxed drop-shadow-sm"
                 >
                   From the first hello to forever, every second has been a chapter in our love story.
                 </motion.p>
               </div>
             </CinematicSection>
             <div className="px-4 pb-24 space-y-24">
-              <CountdownTimer targetDate="2025-09-21" label="Until our first anniversary" />
+              <CountdownTimer targetDate="2026-12-14" label="Until our next anniversary" />
               <FavoriteThings />
             </div>
           </div>

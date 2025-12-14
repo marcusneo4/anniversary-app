@@ -89,7 +89,7 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-xs uppercase tracking-[0.5em] text-pink-400 font-semibold mb-6 modern-subheadline"
+          className="text-xs uppercase tracking-[0.5em] text-pink-600 font-semibold mb-6 modern-subheadline drop-shadow-sm"
         >
           Our first chapter
         </motion.p>
@@ -100,7 +100,7 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
           transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 15 }}
           className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold leading-[0.9] mb-8"
         >
-          <span className="block gradient-text neon-glow modern-headline dynamic-glow">
+          <span className="block text-black modern-headline">
             {content.heading.split(' ').map((word, i) => (
               <motion.span
                 key={i}
@@ -121,7 +121,7 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mx-auto mt-8 max-w-3xl text-xl md:text-2xl lg:text-3xl modern-body text-gray-600 leading-relaxed"
+          className="mx-auto mt-8 max-w-3xl text-xl md:text-2xl lg:text-3xl modern-body text-gray-800 leading-relaxed drop-shadow-sm"
         >
           {content.subheading}
         </motion.p>
@@ -133,7 +133,7 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
           whileHover={{ scale: 1.02, y: -5 }}
           className="mx-auto mt-12 max-w-4xl rounded-2xl glass-modern glass-shimmer p-8 md:p-12 border border-pink-300/40"
         >
-          <p className="text-xl md:text-2xl lg:text-3xl modern-body italic leading-relaxed text-gray-700">
+          <p className="text-xl md:text-2xl lg:text-3xl modern-body italic leading-relaxed text-gray-800 drop-shadow-sm">
             "{content.dedication}"
           </p>
           <div className="mt-6 flex items-center justify-center gap-3">
