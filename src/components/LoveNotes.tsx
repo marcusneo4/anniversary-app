@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HandDrawnDecorations } from "./HandDrawnDecorations";
+import { resolvePublicAssetUrl } from "../utils/assetUrl";
 
 type LetterCover = "A" | "B" | "C" | "D" | "E";
 
@@ -43,7 +44,8 @@ export function LoveNotes() {
   const [draggingKey, setDraggingKey] = useState<string | null>(null);
   const imageRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  const getCoverImage = (cover: LetterCover) => `/media/photos/Letters/Cover ${cover}.jpg`;
+  const getCoverImage = (cover: LetterCover) =>
+    resolvePublicAssetUrl(`/media/photos/Letters/Cover ${cover}.jpg`);
 
   const closeModal = () => {
     setSelectedCover(null);
@@ -334,7 +336,7 @@ export function LoveNotes() {
                             style={{ cursor: zoomState.scale > 1 ? (isDragging && draggingKey === imageKey ? 'grabbing' : 'grab') : 'default' }}
                           >
                             <img
-                              src={imagePath}
+                              src={resolvePublicAssetUrl(imagePath)}
                               alt={`Body ${selectedCover}${bodyImages[selectedCover].length > 1 ? ` Page ${idx + 1}` : ""}`}
                               className={`${
                                 isHorizontal || needsRotation
