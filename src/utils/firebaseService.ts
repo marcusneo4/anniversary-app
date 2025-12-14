@@ -10,6 +10,11 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
+// Check if Firebase is available
+const isFirebaseAvailable = () => {
+  return db !== null;
+};
+
 // Collection names
 const COLLECTIONS = {
   GALLERY: 'gallery',
@@ -26,8 +31,11 @@ const APP_DOC_ID = 'anniversary-data';
 
 // Generic functions for Firestore operations
 async function getDocument(collectionName: string, docId: string = APP_DOC_ID): Promise<DocumentData | null> {
+  if (!isFirebaseAvailable()) {
+    return null;
+  }
   try {
-    const docRef = doc(db, collectionName, docId);
+    const docRef = doc(db!, collectionName, docId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return docSnap.data();
@@ -40,8 +48,11 @@ async function getDocument(collectionName: string, docId: string = APP_DOC_ID): 
 }
 
 async function setDocument(collectionName: string, data: any, docId: string = APP_DOC_ID): Promise<boolean> {
+  if (!isFirebaseAvailable()) {
+    return false;
+  }
   try {
-    const docRef = doc(db, collectionName, docId);
+    const docRef = doc(db!, collectionName, docId);
     await setDoc(docRef, { data, updatedAt: new Date().toISOString() }, { merge: true });
     return true;
   } catch (error) {
@@ -152,7 +163,11 @@ export function subscribeToData(
   callback: (data: any) => void,
   docId: string = APP_DOC_ID
 ): () => void {
-  const docRef = doc(db, collectionName, docId);
+  if (!isFirebaseAvailable()) {
+    // Return a no-op unsubscribe function if Firebase is not available
+    return () => {};
+  }
+  const docRef = doc(db!, collectionName, docId);
   return onSnapshot(docRef, (docSnap) => {
     if (docSnap.exists()) {
       callback(docSnap.data()?.data || null);
