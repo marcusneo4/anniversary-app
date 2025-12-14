@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { monthlyTimelineData, type MonthlyTimelineEntry } from "../data/content";
 import { loadMonthlyTimeline, saveMonthlyTimeline } from "../utils/contentManager";
+import { resolvePublicAssetUrl } from "../utils/assetUrl";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -138,7 +139,7 @@ export function MonthlyTimeline() {
                 <div className="relative h-64 overflow-hidden bg-gradient-to-br from-rose-100 to-rose-200">
                   {entry.type === "video" ? (
                     <video
-                      src={entry.image}
+                      src={resolvePublicAssetUrl(entry.image)}
                       className="h-full w-full object-cover"
                       loop
                       muted
@@ -148,7 +149,7 @@ export function MonthlyTimeline() {
                     />
                   ) : (
                     <img
-                      src={entry.image}
+                      src={resolvePublicAssetUrl(entry.image)}
                       alt={entry.alt}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"

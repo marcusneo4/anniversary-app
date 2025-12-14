@@ -30,6 +30,7 @@ import {
   resetAllContent
 } from "../utils/contentManager";
 import { convertImageToBase64 } from "../utils/firebaseService";
+import { resolvePublicAssetUrl } from "../utils/assetUrl";
 
 type AdminPanelProps = {
   isOpen: boolean;
@@ -348,6 +349,16 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
                             />
                           </div>
                         )}
+                        {item.image && !item.image.startsWith("data:image") && (
+                          <div className="mt-2">
+                            <img
+                              src={resolvePublicAssetUrl(item.image)}
+                              alt="Preview"
+                              className="max-w-full h-32 object-cover rounded border border-rose-200"
+                              loading="lazy"
+                            />
+                          </div>
+                        )}
                       </div>
                       <div>
                         <label className="block text-xs text-rose-600">Alt Text</label>
@@ -548,6 +559,16 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
                                   src={entry.image} 
                                   alt="Preview" 
                                   className="max-w-full h-32 object-cover rounded border border-rose-200"
+                                />
+                              </div>
+                            )}
+                            {entry.image && !entry.image.startsWith("data:image") && (
+                              <div className="mt-2">
+                                <img
+                                  src={resolvePublicAssetUrl(entry.image)}
+                                  alt="Preview"
+                                  className="max-w-full h-32 object-cover rounded border border-rose-200"
+                                  loading="lazy"
                                 />
                               </div>
                             )}

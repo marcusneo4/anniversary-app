@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { galleryMoments, type GalleryMoment } from "../data/content";
 import { loadGallery, saveGallery } from "../utils/contentManager";
+import { resolvePublicAssetUrl } from "../utils/assetUrl";
 
 export function MemoryGallery() {
   const [moments, setMoments] = useState<GalleryMoment[]>(galleryMoments);
@@ -154,6 +155,7 @@ export function MemoryGallery() {
             })
             .map((moment, index) => {
             const isVid = isVideo(moment.image);
+            const mediaSrc = resolvePublicAssetUrl(moment.image);
             return (
               <motion.article
                 key={moment.id}
@@ -168,7 +170,7 @@ export function MemoryGallery() {
                 <div className="relative h-64 overflow-hidden rounded-t-3xl bg-gradient-to-br from-rose-100 to-rose-200">
                   {isVid ? (
                     <video
-                      src={moment.image}
+                      src={mediaSrc}
                       className="h-full w-full object-cover"
                       loop
                       muted
@@ -178,7 +180,7 @@ export function MemoryGallery() {
                     />
                   ) : (
                     <img
-                      src={moment.image}
+                      src={mediaSrc}
                       alt={moment.alt}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
@@ -246,14 +248,14 @@ export function MemoryGallery() {
               </button>
               {isVideo(selectedMoment.image) ? (
                 <video
-                  src={selectedMoment.image}
+                  src={resolvePublicAssetUrl(selectedMoment.image)}
                   className="max-h-[90vh] rounded-2xl"
                   controls
                   autoPlay
                 />
               ) : (
                 <img
-                  src={selectedMoment.image}
+                  src={resolvePublicAssetUrl(selectedMoment.image)}
                   alt={selectedMoment.alt}
                   className="max-h-[90vh] rounded-2xl"
                 />
