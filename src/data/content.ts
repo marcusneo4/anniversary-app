@@ -82,138 +82,46 @@ const placeholderImage = (color: string) =>
   </svg>`)}`;
 
 export const galleryMoments: GalleryMoment[] = [
-  {
-    id: 1,
-    image: "/media/photos/photo-1.jpg",
-    alt: "A beautiful memory together",
-    caption: "A beautiful moment captured forever"
-  },
-  {
-    id: 2,
-    image: "/media/photos/photo-2.jpg",
-    alt: "Another special memory together",
-    caption: "Another special memory together"
-  },
-  {
-    id: 3,
-    image: "/media/photos/photo_1_2025-12-14_11-32-10.jpg",
-    alt: "Cherished memory",
-    caption: "A moment we'll treasure forever"
-  },
-  {
-    id: 4,
-    image: "/media/photos/photo_2_2025-12-14_11-32-10.jpg",
-    alt: "Special moment",
-    caption: "Captured in time, forever in our hearts"
-  },
-  {
-    id: 5,
-    image: "/media/photos/photo_3_2025-12-14_11-32-10.jpg",
-    alt: "Beautiful memory",
-    caption: "These are the moments that matter"
-  },
-  {
-    id: 6,
-    image: "/media/photos/photo_4_2025-12-14_11-32-10.jpg",
-    alt: "Precious memory",
-    caption: "Every picture tells our story"
-  },
-  {
-    id: 7,
-    image: "/media/photos/photo_5_2025-12-14_11-32-10.jpg",
-    alt: "Loving memory",
-    caption: "Together, always"
-  },
-  {
-    id: 8,
-    image: "/media/photos/photo_6_2025-12-14_11-32-10.jpg",
-    alt: "Sweet memory",
-    caption: "Frozen in time, alive in our hearts"
-  },
-  {
-    id: 9,
-    image: "/media/photos/photo_7_2025-12-14_11-32-10.jpg",
-    alt: "Treasured moment",
-    caption: "The best moments are the ones we share"
-  },
-  {
-    id: 10,
-    image: "/media/photos/photo_8_2025-12-14_11-32-10.jpg",
-    alt: "Beautiful memory",
-    caption: "A snapshot of happiness"
-  },
-  {
-    id: 11,
-    image: "/media/photos/photo_9_2025-12-14_11-32-10.jpg",
-    alt: "Special moment",
-    caption: "Love captured in a frame"
-  },
-  {
-    id: 12,
-    image: "/media/photos/photo_10_2025-12-14_11-32-10.jpg",
-    alt: "Cherished memory",
-    caption: "These memories will last forever"
-  },
-  {
-    id: 13,
-    image: "/media/photos/photo_11_2025-12-14_11-32-10.jpg",
-    alt: "Precious moment",
-    caption: "Every moment with you is a gift"
-  },
-  {
-    id: 14,
-    image: "/media/photos/photo_12_2025-12-14_11-32-10.jpg",
-    alt: "Loving memory",
-    caption: "Together we create beautiful memories"
-  },
-  {
-    id: 15,
-    image: "/media/photos/photo_13_2025-12-14_11-32-10.jpg",
-    alt: "Sweet memory",
-    caption: "A picture is worth a thousand words"
-  },
-  {
-    id: 16,
-    image: "/media/photos/photo_14_2025-12-14_11-32-10.jpg",
-    alt: "Treasured moment",
-    caption: "Capturing our journey together"
-  },
-  {
-    id: 17,
-    image: "/media/photos/photo_15_2025-12-14_11-32-10.jpg",
-    alt: "Beautiful memory",
-    caption: "These moments define us"
-  },
-  {
-    id: 18,
-    image: "/media/photos/photo_16_2025-12-14_11-32-10.jpg",
-    alt: "Special memory",
-    caption: "Forever in our hearts"
-  },
-  {
-    id: 19,
-    image: "/media/photos/photo_17_2025-12-14_11-32-10.jpg",
-    alt: "Cherished moment",
-    caption: "Love in every frame"
-  },
-  {
-    id: 20,
-    image: "/media/photos/photo_18_2025-12-14_11-32-10.jpg",
-    alt: "Precious memory",
-    caption: "A collection of our best moments"
-  },
-  {
-    id: 21,
-    image: "/media/photos/photo_19_2025-12-14_11-32-10.jpg",
-    alt: "Loving memory",
-    caption: "Every photo tells our story"
-  },
-  {
-    id: 22,
-    image: "/media/photos/photo_20_2025-12-14_11-32-10.jpg",
-    alt: "Sweet memory",
-    caption: "Memories that will never fade"
-  }
+  // January
+  { id: 1, image: "/media/photos/January/photo_1_2025-12-14_14-01-32.jpg", alt: "January memory", caption: "New year, new adventures, same us" },
+  { id: 2, image: "/media/photos/January/photo_2_2025-12-14_14-01-32.jpg", alt: "January memory", caption: "When the world felt quiet, we found our rhythm" },
+  { id: 3, image: "/media/photos/January/photo_5_2025-12-14_14-01-32.jpg", alt: "January memory", caption: "Proof that the best days are the ones we spend together" },
+  // February
+  { id: 4, image: "/media/photos/February/photo_1_2025-12-14_14-02-28.jpg", alt: "February memory", caption: "Love in the air, and everywhere we looked" },
+  { id: 5, image: "/media/photos/February/photo_3_2025-12-14_14-02-28.jpg", alt: "February memory", caption: "Sweet moments that taste like forever" },
+  { id: 6, image: "/media/photos/February/photo_5_2025-12-14_14-02-28.jpg", alt: "February memory", caption: "Captured: the exact moment I knew I was yours" },
+  // April
+  { id: 7, image: "/media/photos/April/photo_2_2025-12-14_14-02-52.jpg", alt: "April memory", caption: "Sunset oranges and your laugh—perfect harmony" },
+  { id: 8, image: "/media/photos/April/photo_4_2025-12-14_14-02-52.jpg", alt: "April memory", caption: "You insisted the clouds looked like marshmallows. I believed you." },
+  { id: 9, image: "/media/photos/April/photo_8_2025-12-14_14-02-52.jpg", alt: "April memory", caption: "Caught mid-laugh, the way I love you most" },
+  { id: 10, image: "/media/photos/April/photo_12_2025-12-14_14-02-52.jpg", alt: "April memory", caption: "The kind of day that makes you want to freeze time" },
+  // May
+  { id: 11, image: "/media/photos/May/photo_1_2025-12-14_14-03-11.jpg", alt: "May memory", caption: "May flowers and your smile—nature's best work" },
+  { id: 12, image: "/media/photos/May/photo_4_2025-12-14_14-03-11.jpg", alt: "May memory", caption: "Caught in a moment of pure joy" },
+  { id: 13, image: "/media/photos/May/photo_7_2025-12-14_14-03-11.jpg", alt: "May memory", caption: "The kind of moment that makes you believe in forever" },
+  // June
+  { id: 14, image: "/media/photos/June/photo_2_2025-12-14_14-03-32.jpg", alt: "June memory", caption: "Long days, longer conversations, infinite love" },
+  { id: 15, image: "/media/photos/June/photo_5_2025-12-14_14-03-32.jpg", alt: "June memory", caption: "The moment we realized we were building our forever" },
+  // July
+  { id: 16, image: "/media/photos/July/photo_1_2025-12-14_14-03-51.jpg", alt: "July memory", caption: "The storm cancelled our plans, but gave us something better" },
+  { id: 17, image: "/media/photos/July/photo_4_2025-12-14_14-03-51.jpg", alt: "July memory", caption: "Playlists and confessions in the quiet of the storm" },
+  { id: 18, image: "/media/photos/July/photo_8_2025-12-14_14-03-51.jpg", alt: "July memory", caption: "Caught in the rain, caught in each other's eyes" },
+  // August
+  { id: 19, image: "/media/photos/August/photo_2_2025-12-14_14-04-11.jpg", alt: "August memory", caption: "When summer nights felt endless and so did our love" },
+  { id: 20, image: "/media/photos/August/photo_6_2025-12-14_14-04-11.jpg", alt: "August memory", caption: "When every day felt like a celebration of us" },
+  { id: 21, image: "/media/photos/August/photo_10_2025-12-14_14-04-11.jpg", alt: "August memory", caption: "When the world felt big and we felt invincible together" },
+  // September
+  { id: 22, image: "/media/photos/September/photo_1_2025-12-14_14-04-34.jpg", alt: "September memory", caption: "Passport stamps and sushi—Osaka showed us the world" },
+  { id: 23, image: "/media/photos/September/photo_5_2025-12-14_14-04-34.jpg", alt: "September memory", caption: "September's gift: discovering new places and each other" },
+  { id: 24, image: "/media/photos/September/photo_9_2025-12-14_14-04-34.jpg", alt: "September memory", caption: "September taught us that home is wherever we are together" },
+  // October
+  { id: 25, image: "/media/photos/October/photo_3_2025-12-14_14-04-53.jpg", alt: "October memory", caption: "The month we learned that love changes with the seasons" },
+  { id: 26, image: "/media/photos/October/photo_7_2025-12-14_14-04-53.jpg", alt: "October memory", caption: "The kind of moment that makes you want to stay forever" },
+  // November
+  { id: 27, image: "/media/photos/November/photo_2_2025-12-14_14-05-14.jpg", alt: "November memory", caption: "When the year started winding down but our love kept growing" },
+  { id: 28, image: "/media/photos/November/photo_8_2025-12-14_14-05-14.jpg", alt: "November memory", caption: "November taught us that love is in the everyday moments" },
+  { id: 29, image: "/media/photos/November/photo_15_2025-12-14_14-05-14.jpg", alt: "November memory", caption: "November showed us that love grows in gratitude" },
+  { id: 30, image: "/media/photos/November/photo_20_2025-12-14_14-05-14.jpg", alt: "November memory", caption: "Frozen in time, alive in our hearts" }
 ];
 
 export type LoveNote = {
