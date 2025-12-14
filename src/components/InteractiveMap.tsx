@@ -232,6 +232,16 @@ type VisitedCountry = {
   note?: string;
 };
 
+// Default locations that are always present
+const defaultVisitedCountries: VisitedCountry[] = [
+  { id: 1, name: "Singapore" },
+  { id: 2, name: "Malaysia" },
+  { id: 3, name: "Belgium" },
+  { id: 4, name: "Austria" },
+  { id: 5, name: "France" },
+  { id: 6, name: "Morocco", note: "North Africa" }, // Using Morocco to represent North Africa
+  { id: 7, name: "Portugal" }
+];
 
 export function InteractiveMap() {
   const [visitedCountries, setVisitedCountries] = useState<VisitedCountry[]>([]);
@@ -247,39 +257,64 @@ export function InteractiveMap() {
   const svgWidth = 360;
   const svgHeight = 180;
 
-  // Load from Firebase or localStorage
+  // Load from Firebase or localStorage, always merge with defaults
   useEffect(() => {
     const loadData = async () => {
+      let saved: VisitedCountry[] = [];
+      
       try {
         // Try Firebase first
         const firebaseCountries = await loadCountries();
         if (firebaseCountries.length > 0) {
-          setVisitedCountries(firebaseCountries);
-          return;
+          saved = firebaseCountries;
         }
       } catch (e) {
         console.log("Firebase not configured, trying localStorage");
       }
       
-      // Fallback to localStorage
-      const saved = localStorage.getItem("visitedCountries");
-      if (saved) {
+      // Fallback to localStorage if Firebase didn't return data
+      if (saved.length === 0) {
+        const localStorageData = localStorage.getItem("visitedCountries");
+        if (localStorageData) {
+          try {
+            saved = JSON.parse(localStorageData);
+          } catch (e) {
+            console.error("Failed to load visited countries", e);
+          }
+        }
+      }
+      
+      // Always ensure default locations are present
+      // Merge saved data with defaults, ensuring defaults are always included
+      const defaultCountryNames = new Set(defaultVisitedCountries.map(c => c.name));
+      const savedWithoutDefaults = saved.filter(c => !defaultCountryNames.has(c.name));
+      // Combine: default locations first, then any additional saved items
+      const mergedCountries = [...defaultVisitedCountries, ...savedWithoutDefaults];
+      setVisitedCountries(mergedCountries);
+      
+      // If no saved data exists, save the defaults to ensure persistence
+      if (saved.length === 0) {
         try {
-          setVisitedCountries(JSON.parse(saved));
+          await saveCountries(mergedCountries);
         } catch (e) {
-          console.error("Failed to load visited countries", e);
+          // If Firebase fails, localStorage will be saved by the save effect
+          localStorage.setItem("visitedCountries", JSON.stringify(mergedCountries));
         }
       }
     };
     loadData();
   }, []);
 
-  // Save to Firebase or localStorage
+  // Save to Firebase or localStorage (excluding defaults since they're always there)
   useEffect(() => {
     const saveData = async () => {
-      if (visitedCountries.length > 0) {
+      // Only save non-default countries
+      const defaultCountryNames = new Set(defaultVisitedCountries.map(c => c.name));
+      const countriesToSave = visitedCountries.filter(c => !defaultCountryNames.has(c.name));
+      
+      if (countriesToSave.length > 0 || visitedCountries.length > 0) {
         try {
-          // Try Firebase first
+          // Try Firebase first - save all countries including defaults for consistency
           const saved = await saveCountries(visitedCountries);
           if (saved) {
             setJustSaved(true);
@@ -290,7 +325,7 @@ export function InteractiveMap() {
           console.log("Firebase not configured, using localStorage");
         }
         
-        // Fallback to localStorage
+        // Fallback to localStorage - save all countries
         localStorage.setItem("visitedCountries", JSON.stringify(visitedCountries));
         setJustSaved(true);
         setTimeout(() => setJustSaved(false), 2000);
@@ -303,15 +338,23 @@ export function InteractiveMap() {
 
   const handleAddCountry = () => {
     if (selectedCountryName.trim()) {
+      const countryName = selectedCountryName.trim();
+      
       // Check if country is already added
-      if (visitedCountries.some(c => c.name === selectedCountryName.trim())) {
+      if (visitedCountries.some(c => c.name === countryName)) {
         alert("This country is already in your list!");
+        return;
+      }
+      
+      // Special check: prevent adding Morocco if North Africa (Morocco with note) already exists
+      if (countryName === "Morocco" && visitedCountries.some(c => c.name === "Morocco" && c.note === "North Africa")) {
+        alert("North Africa is already in your list!");
         return;
       }
 
       const country: VisitedCountry = {
         id: Date.now(),
-        name: selectedCountryName.trim(),
+        name: countryName,
         date: newDate.trim() || undefined,
         note: newNote.trim() || undefined
       };
@@ -325,12 +368,34 @@ export function InteractiveMap() {
   };
 
   const handleDeleteCountry = (id: number) => {
+    // Prevent deleting default countries
+    const countryToDelete = visitedCountries.find(c => c.id === id);
+    if (countryToDelete) {
+      const defaultCountryNames = new Set(defaultVisitedCountries.map(c => c.name));
+      if (defaultCountryNames.has(countryToDelete.name)) {
+        alert("Default locations cannot be removed!");
+        return;
+      }
+    }
     setVisitedCountries(visitedCountries.filter(c => c.id !== id));
   };
 
   const getCountryCoordinates = (countryName: string): [number, number] | null => {
+    // Handle "North Africa" special case - use Morocco coordinates
+    if (countryName === "North Africa" || countryName === "Morocco") {
+      const morocco = allCountries.find(c => c.name === "Morocco");
+      return morocco ? morocco.coordinates : null;
+    }
     const country = allCountries.find(c => c.name === countryName);
     return country ? country.coordinates : null;
+  };
+
+  const getDisplayName = (country: VisitedCountry): string => {
+    // Show "North Africa" for Morocco when note indicates it
+    if (country.name === "Morocco" && country.note === "North Africa") {
+      return "North Africa";
+    }
+    return country.name;
   };
 
   // Filter countries by region and search query
@@ -412,22 +477,33 @@ export function InteractiveMap() {
                     style={{ cursor: 'pointer' }}
                     transform={`translate(${x}, ${y})`}
                   >
-                    {/* Pin marker - thin and small */}
+                    {/* Google Maps style pin marker */}
                     <g className="marker-pin" style={{ transition: 'transform 0.2s' }}>
-                      <path
-                        d="M 0,0 L -2,-8 L 2,-8 Z"
-                      fill="#ec4899"
-                      stroke="#ffffff"
-                        strokeWidth="0.5"
-                    />
-                    <circle
+                      {/* Pin shadow */}
+                      <ellipse
                         cx={0}
-                        cy={0}
-                        r={1.5}
-                        fill="#ec4899"
+                        cy={8}
+                        rx={3}
+                        ry={1.5}
+                        fill="rgba(0,0,0,0.2)"
+                        opacity="0.3"
+                      />
+                      {/* Pin body - teardrop shape */}
+                      <path
+                        d="M 0,0 L -3.5,-10 A 3.5,3.5 0 0,1 3.5,-10 Z"
+                        fill="#ea4335"
                         stroke="#ffffff"
-                        strokeWidth="0.5"
-                    />
+                        strokeWidth="1"
+                      />
+                      {/* Pin center circle */}
+                      <circle
+                        cx={0}
+                        cy={-6}
+                        r={2}
+                        fill="#ffffff"
+                        stroke="#ea4335"
+                        strokeWidth="0.8"
+                      />
                     </g>
                     {/* Country name label - only show on hover */}
                     <text
@@ -446,9 +522,12 @@ export function InteractiveMap() {
                         transition: "opacity 0.2s"
                       }}
                     >
-                      {country.name.length > 15 
-                        ? country.name.substring(0, 12) + "..." 
-                        : country.name}
+                      {(() => {
+                        const displayName = getDisplayName(country);
+                        return displayName.length > 15 
+                          ? displayName.substring(0, 12) + "..." 
+                          : displayName;
+                      })()}
                     </text>
                   </g>
                 );
@@ -628,7 +707,7 @@ export function InteractiveMap() {
                     </svg>
                   </div>
                   <h3 className="font-display text-xl font-bold text-rose-900">
-                    {country.name}
+                    {getDisplayName(country)}
                   </h3>
                 </div>
                 {country.date && (
@@ -636,19 +715,21 @@ export function InteractiveMap() {
                     📅 {country.date}
                   </p>
                 )}
-                {country.note && (
+                {country.note && country.note !== "North Africa" && (
                   <p className="text-sm text-rose-700">{country.note}</p>
                 )}
               </div>
-              <button
-                onClick={() => handleDeleteCountry(country.id)}
-                className="ml-4 rounded-full p-2 text-rose-400 hover:bg-rose-100 hover:text-rose-600 transition-all"
-                title="Remove country"
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+              {!defaultVisitedCountries.some(dc => dc.name === country.name) && (
+                <button
+                  onClick={() => handleDeleteCountry(country.id)}
+                  className="ml-4 rounded-full p-2 text-rose-400 hover:bg-rose-100 hover:text-rose-600 transition-all"
+                  title="Remove country"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
             </div>
           </motion.div>
         ))}
@@ -696,11 +777,11 @@ export function InteractiveMap() {
               onClick={(e) => e.stopPropagation()}
               className="rounded-2xl bg-white p-8 max-w-md w-full shadow-2xl"
             >
-              <h3 className="text-2xl font-bold text-rose-900 mb-4">{selectedCountry.name}</h3>
+              <h3 className="text-2xl font-bold text-rose-900 mb-4">{getDisplayName(selectedCountry)}</h3>
               {selectedCountry.date && (
                 <p className="text-rose-600 mb-2">📅 {selectedCountry.date}</p>
               )}
-              {selectedCountry.note && (
+              {selectedCountry.note && selectedCountry.note !== "North Africa" && (
                 <p className="text-rose-700 mb-4">{selectedCountry.note}</p>
               )}
               <button

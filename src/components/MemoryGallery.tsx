@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { galleryMoments, type GalleryMoment } from "../data/content";
-import { loadGallery } from "../utils/contentManager";
+import { loadGallery, saveGallery } from "../utils/contentManager";
 
 export function MemoryGallery() {
   const [moments, setMoments] = useState<GalleryMoment[]>(galleryMoments);
@@ -14,11 +14,17 @@ export function MemoryGallery() {
   useEffect(() => {
     const loadData = async () => {
       const saved = await loadGallery();
-      if (saved.length > 0) {
-        setMoments(saved);
-      } else {
-        // Initialize with default gallery if nothing saved
-        setMoments(galleryMoments);
+      // Always ensure default images are present
+      // Merge saved data with default gallery, ensuring defaults are always included
+      const defaultImagePaths = new Set(galleryMoments.map(m => m.image));
+      const savedWithoutDefaults = saved.filter(m => !defaultImagePaths.has(m.image));
+      // Combine: default images first, then any additional saved items
+      const mergedMoments = [...galleryMoments, ...savedWithoutDefaults];
+      setMoments(mergedMoments);
+      
+      // If no saved data exists, save the defaults to ensure persistence
+      if (saved.length === 0) {
+        await saveGallery(galleryMoments);
       }
     };
     loadData();

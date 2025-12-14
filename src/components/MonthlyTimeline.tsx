@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { monthlyTimelineData, type MonthlyTimelineEntry } from "../data/content";
-import { loadMonthlyTimeline } from "../utils/contentManager";
+import { loadMonthlyTimeline, saveMonthlyTimeline } from "../utils/contentManager";
 
 const months = [
   "January", "February", "March", "April", "May", "June",
@@ -18,15 +18,34 @@ export function MonthlyTimeline() {
   useEffect(() => {
     const loadData = async () => {
       const saved = await loadMonthlyTimeline();
-      if (Object.keys(saved).length > 0) {
-        setEntries(saved);
-      } else {
-        // Initialize with empty entries for each month
-        const initialEntries: Record<number, MonthlyTimelineEntry[]> = {};
-        months.forEach((_, index) => {
-          initialEntries[index] = monthlyTimelineData[index] || [];
-        });
-        setEntries(initialEntries);
+      
+      // Always ensure default images are present
+      // Merge saved data with default timeline, ensuring defaults are always included
+      const mergedEntries: Record<number, MonthlyTimelineEntry[]> = {};
+      
+      months.forEach((_, index) => {
+        const defaultEntries = monthlyTimelineData[index] || [];
+        const savedEntries = saved[index] || [];
+        
+        // Create a set of default image paths to avoid duplicates
+        const defaultImagePaths = new Set(defaultEntries.map(e => e.image));
+        // Filter out saved entries that match defaults
+        const savedWithoutDefaults = savedEntries.filter(e => !defaultImagePaths.has(e.image));
+        
+        // Combine: default entries first, then any additional saved items
+        mergedEntries[index] = [...defaultEntries, ...savedWithoutDefaults];
+      });
+      
+      setEntries(mergedEntries);
+      
+      // If no saved data exists, save the defaults to ensure persistence
+      if (Object.keys(saved).length === 0) {
+        try {
+          await saveMonthlyTimeline(mergedEntries);
+        } catch (e) {
+          // If save fails, it's okay - defaults will still show
+          console.log("Could not save monthly timeline defaults", e);
+        }
       }
     };
     loadData();
