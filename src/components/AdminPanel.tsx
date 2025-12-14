@@ -29,6 +29,7 @@ import {
   saveMonthlyTimeline,
   resetAllContent
 } from "../utils/contentManager";
+import { convertImageToBase64 } from "../utils/firebaseService";
 
 type AdminPanelProps = {
   isOpen: boolean;
@@ -56,30 +57,37 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
 
   useEffect(() => {
     if (isOpen) {
-      // Load saved content or use defaults
-      const savedHero = loadHero();
-      const savedGallery = loadGallery();
-      const savedTimeline = loadTimeline();
-      const savedMonthly = loadMonthlyTimeline();
-      const savedNotes = loadLoveNotes();
-      const savedClosing = loadClosing();
+      // Load saved content or use defaults (async)
+      const loadData = async () => {
+        const [savedHero, savedGallery, savedTimeline, savedMonthly, savedNotes, savedClosing] = await Promise.all([
+          loadHero(),
+          loadGallery(),
+          loadTimeline(),
+          loadMonthlyTimeline(),
+          loadLoveNotes(),
+          loadClosing()
+        ]);
 
-      setHero(savedHero || heroContent);
-      setGallery(savedGallery.length > 0 ? savedGallery : galleryMoments);
-      setTimeline(savedTimeline.length > 0 ? savedTimeline : timelineMilestones);
-      setMonthlyTimeline(Object.keys(savedMonthly).length > 0 ? savedMonthly : monthlyTimelineData);
-      setNotes(savedNotes.length > 0 ? savedNotes : loveNotes);
-      setClosing(savedClosing || closingToast);
+        setHero(savedHero || heroContent);
+        setGallery(savedGallery.length > 0 ? savedGallery : galleryMoments);
+        setTimeline(savedTimeline.length > 0 ? savedTimeline : timelineMilestones);
+        setMonthlyTimeline(Object.keys(savedMonthly).length > 0 ? savedMonthly : monthlyTimelineData);
+        setNotes(savedNotes.length > 0 ? savedNotes : loveNotes);
+        setClosing(savedClosing || closingToast);
+      };
+      loadData();
     }
   }, [isOpen]);
 
-  const handleSave = () => {
-    saveHero(hero);
-    saveGallery(gallery);
-    saveTimeline(timeline);
-    saveMonthlyTimeline(monthlyTimeline);
-    saveLoveNotes(notes);
-    saveClosing(closing);
+  const handleSave = async () => {
+    await Promise.all([
+      saveHero(hero),
+      saveGallery(gallery),
+      saveTimeline(timeline),
+      saveMonthlyTimeline(monthlyTimeline),
+      saveLoveNotes(notes),
+      saveClosing(closing)
+    ]);
     setSaved(true);
     onContentUpdate();
     setTimeout(() => setSaved(false), 2000);
@@ -118,6 +126,52 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
 
   const deleteGalleryItem = (id: number) => {
     setGallery(gallery.filter((item) => item.id !== id));
+  };
+
+  // Convert image file to base64 data URI
+  const handleImageUpload = (file: File, callback: (base64: string) => void) => {
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result;
+      if (typeof result === 'string') {
+        callback(result);
+      }
+    };
+    reader.onerror = () => {
+      alert('Failed to read image file');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Handle gallery image upload (converts to base64 - stored in Firestore, FREE!)
+  const handleGalleryImageUpload = async (id: number, file: File) => {
+    const base64 = await convertImageToBase64(file);
+    if (base64) {
+      updateGalleryItem(id, 'image', base64);
+    } else {
+      alert('Please select a valid image file');
+    }
+  };
+
+  // Handle monthly timeline image upload (converts to base64 - stored in Firestore, FREE!)
+  const handleMonthlyImageUpload = async (entryId: number, file: File) => {
+    const base64 = await convertImageToBase64(file);
+    if (base64) {
+      const currentEntries = monthlyTimeline[selectedMonth] || [];
+      setMonthlyTimeline({
+        ...monthlyTimeline,
+        [selectedMonth]: currentEntries.map((item) =>
+          item.id === entryId ? { ...item, image: base64 } : item
+        )
+      });
+    } else {
+      alert('Please select a valid image file');
+    }
   };
 
   if (!isOpen) return null;
@@ -256,17 +310,44 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
                     </div>
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-xs text-rose-600">Image/Video Path</label>
+                        <label className="block text-xs text-rose-600 mb-2">Image/Video</label>
+                        <div className="flex gap-2 mb-2">
+                          <label className="flex-1 cursor-pointer">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  handleGalleryImageUpload(item.id, file);
+                                }
+                              }}
+                            />
+                            <div className="rounded-lg border-2 border-dashed border-rose-300 bg-rose-50 px-4 py-2 text-center text-xs text-rose-600 hover:bg-rose-100 transition">
+                              📸 Upload Photo
+                            </div>
+                          </label>
+                        </div>
                         <input
                           type="text"
                           value={item.image}
                           onChange={(e) => updateGalleryItem(item.id, "image", e.target.value)}
-                          placeholder="/media/photos/photo-1.jpg"
+                          placeholder="/media/photos/photo-1.jpg or paste base64 data URI"
                           className="mt-1 w-full rounded border border-rose-200 bg-white px-3 py-1.5 text-sm text-rose-900 focus:border-blush-500 focus:outline-none"
                         />
                         <p className="mt-1 text-xs text-rose-400">
-                          Use /media/photos/ for photos or /media/videos/ for videos
+                          Upload a photo (saved as base64) or use /media/photos/ for file paths
                         </p>
+                        {item.image && item.image.startsWith('data:image') && (
+                          <div className="mt-2">
+                            <img 
+                              src={item.image} 
+                              alt="Preview" 
+                              className="max-w-full h-32 object-cover rounded border border-rose-200"
+                            />
+                          </div>
+                        )}
                       </div>
                       <div>
                         <label className="block text-xs text-rose-600">Alt Text</label>
@@ -427,7 +508,25 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
                         </div>
                         <div className="space-y-3">
                           <div>
-                            <label className="block text-xs text-rose-600">Image/Video Path</label>
+                            <label className="block text-xs text-rose-600 mb-2">Image/Video</label>
+                            <div className="flex gap-2 mb-2">
+                              <label className="flex-1 cursor-pointer">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      handleMonthlyImageUpload(entry.id, file);
+                                    }
+                                  }}
+                                />
+                                <div className="rounded-lg border-2 border-dashed border-rose-300 bg-rose-50 px-4 py-2 text-center text-xs text-rose-600 hover:bg-rose-100 transition">
+                                  📸 Upload Photo
+                                </div>
+                              </label>
+                            </div>
                             <input
                               type="text"
                               value={entry.image}
@@ -440,9 +539,18 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
                                   )
                                 });
                               }}
-                              placeholder="/media/photos/photo-1.jpg"
+                              placeholder="/media/photos/photo-1.jpg or paste base64 data URI"
                               className="mt-1 w-full rounded border border-rose-200 bg-white px-3 py-1.5 text-sm text-rose-900 focus:border-rose-500 focus:outline-none"
                             />
+                            {entry.image && entry.image.startsWith('data:image') && (
+                              <div className="mt-2">
+                                <img 
+                                  src={entry.image} 
+                                  alt="Preview" 
+                                  className="max-w-full h-32 object-cover rounded border border-rose-200"
+                                />
+                              </div>
+                            )}
                           </div>
                           <div className="grid grid-cols-2 gap-3">
                             <div>

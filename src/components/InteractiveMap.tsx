@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { loadCountries, saveCountries } from "../utils/firebaseService";
 
 // Helper function to convert lat/lng to SVG coordinates
 // Using equirectangular projection for simplicity
@@ -241,29 +242,63 @@ export function InteractiveMap() {
   const [selectedCountry, setSelectedCountry] = useState<VisitedCountry | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("Europe");
+  const [justSaved, setJustSaved] = useState(false);
 
   const svgWidth = 360;
   const svgHeight = 180;
 
-  // Load from localStorage
+  // Load from Firebase or localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("visitedCountries");
-    if (saved) {
+    const loadData = async () => {
       try {
-        setVisitedCountries(JSON.parse(saved));
+        // Try Firebase first
+        const firebaseCountries = await loadCountries();
+        if (firebaseCountries.length > 0) {
+          setVisitedCountries(firebaseCountries);
+          return;
+        }
       } catch (e) {
-        console.error("Failed to load visited countries", e);
+        console.log("Firebase not configured, trying localStorage");
       }
-    }
+      
+      // Fallback to localStorage
+      const saved = localStorage.getItem("visitedCountries");
+      if (saved) {
+        try {
+          setVisitedCountries(JSON.parse(saved));
+        } catch (e) {
+          console.error("Failed to load visited countries", e);
+        }
+      }
+    };
+    loadData();
   }, []);
 
-  // Save to localStorage
+  // Save to Firebase or localStorage
   useEffect(() => {
-    if (visitedCountries.length > 0) {
-      localStorage.setItem("visitedCountries", JSON.stringify(visitedCountries));
-    } else {
-      localStorage.removeItem("visitedCountries");
-    }
+    const saveData = async () => {
+      if (visitedCountries.length > 0) {
+        try {
+          // Try Firebase first
+          const saved = await saveCountries(visitedCountries);
+          if (saved) {
+            setJustSaved(true);
+            setTimeout(() => setJustSaved(false), 2000);
+            return;
+          }
+        } catch (e) {
+          console.log("Firebase not configured, using localStorage");
+        }
+        
+        // Fallback to localStorage
+        localStorage.setItem("visitedCountries", JSON.stringify(visitedCountries));
+        setJustSaved(true);
+        setTimeout(() => setJustSaved(false), 2000);
+      } else {
+        localStorage.removeItem("visitedCountries");
+      }
+    };
+    saveData();
   }, [visitedCountries]);
 
   const handleAddCountry = () => {
@@ -319,6 +354,16 @@ export function InteractiveMap() {
         <p className="mt-2 text-rose-700">
           Every country holds a piece of our story
         </p>
+        {justSaved && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-3 inline-block rounded-full bg-green-100 px-4 py-1 text-sm text-green-700"
+          >
+            ✓ Saved automatically!
+          </motion.div>
+        )}
       </div>
 
       {/* World Map Visualization */}

@@ -12,13 +12,16 @@ export function MemoryGallery() {
   const [layout, setLayout] = useState<"grid" | "masonry">("grid");
 
   useEffect(() => {
-    const saved = loadGallery();
-    if (saved.length > 0) {
-      setMoments(saved);
-    } else {
-      // Initialize with default gallery if nothing saved
-      setMoments(galleryMoments);
-    }
+    const loadData = async () => {
+      const saved = await loadGallery();
+      if (saved.length > 0) {
+        setMoments(saved);
+      } else {
+        // Initialize with default gallery if nothing saved
+        setMoments(galleryMoments);
+      }
+    };
+    loadData();
   }, []);
 
   const openLightbox = (moment: GalleryMoment) => {

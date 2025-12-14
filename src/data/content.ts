@@ -114,14 +114,14 @@ export const galleryMoments: GalleryMoment[] = [
   },
   {
     id: 6,
-    image: placeholderImage("#fecdd3"),
-    alt: "Memory placeholder",
-    caption: "A beautiful moment waiting to be captured"
+    image: "/media/photos/photo-1.jpg",
+    alt: "A beautiful memory together",
+    caption: "A beautiful moment captured forever"
   },
   {
     id: 7,
-    image: placeholderImage("#fbcfe8"),
-    alt: "Memory placeholder",
+    image: "/media/photos/photo-2.jpg",
+    alt: "Another special memory together",
     caption: "Another special memory together"
   },
   {
