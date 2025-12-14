@@ -1,0 +1,556 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #4a4a4a;
+  background-color: #fef7f7;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff5f8 0%, #ffeef2 25%, #ffe8ed 50%, #ffe5eb 75%, #fff5f8 100%);
+  color: #4a4a4a;
+  overflow-x: hidden;
+  /* Performance optimizations */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffeef2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffb3d9, #ff91c7);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffcce6, #ffb3d9);
+}
+
+.sparkle {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 60%);
+  filter: blur(0.5px);
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scroll with performance optimization */
+html {
+  scroll-behavior: smooth;
+  /* GPU acceleration for smoother scrolling */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimize scrolling performance */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+
+/* Enhanced animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Glass morphism effect - Pastel version */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 182, 193, 0.3);
+}
+
+/* Parallax scroll effects */
+.parallax-slow {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Enhanced hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Pulse animation for interactive elements - Pastel */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 192, 203, 0.6);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Gradient text - Dynamic and impressive */
+.gradient-text {
+  background: linear-gradient(135deg, #ff6b9d, #ff91c7, #ffb3d9, #ffcce6, #ffb3e6, #ff91c7);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 182, 193, 0.5));
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Dynamic text glow */
+@keyframes text-glow {
+  0%, 100% {
+    text-shadow: 
+      0 0 10px rgba(255, 182, 193, 0.5),
+      0 0 20px rgba(255, 182, 193, 0.3),
+      0 0 30px rgba(255, 192, 203, 0.2);
+  }
+  50% {
+    text-shadow: 
+      0 0 20px rgba(255, 182, 193, 0.8),
+      0 0 40px rgba(255, 182, 193, 0.5),
+      0 0 60px rgba(255, 192, 203, 0.3);
+  }
+}
+
+.dynamic-glow {
+  animation: text-glow 3s ease-in-out infinite;
+}
+
+/* Soft glow effect */
+.neon-glow {
+  text-shadow: 0 2px 8px rgba(255, 182, 193, 0.4),
+               0 4px 16px rgba(255, 182, 193, 0.2),
+               0 6px 24px rgba(255, 192, 203, 0.1);
+}
+
+/* Dynamic gradient backgrounds */
+.dark-gradient-1 {
+  background: linear-gradient(135deg, #fff5f8 0%, #ffeef2 50%, #ffe8ed 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-gradient-1::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.2) 0%, transparent 70%);
+  animation: rotate-gradient 20s linear infinite;
+}
+
+@keyframes rotate-gradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.dark-gradient-2 {
+  background: 
+    radial-gradient(ellipse at 20% 30%, rgba(255, 182, 193, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(255, 192, 203, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 218, 225, 0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 10% 80%, rgba(255, 182, 193, 0.3) 0%, transparent 40%),
+    linear-gradient(135deg, #fff5f8 0%, #ffeef2 50%, #ffe8ed 100%);
+  position: relative;
+  animation: gradient-pulse 8s ease-in-out infinite;
+}
+
+@keyframes gradient-pulse {
+  0%, 100% {
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    filter: brightness(1.1) saturate(1.2);
+  }
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Hand-drawn decorative elements */
+.hand-drawn {
+  font-family: 'Caveat', cursive;
+  position: relative;
+}
+
+.hand-drawn::before {
+  content: '';
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  top: -10%;
+  left: -10%;
+  border: 2px solid currentColor;
+  border-radius: 50% 40% 60% 30%;
+  opacity: 0.3;
+  transform: rotate(-5deg);
+}
+
+/* Romantic texture patterns */
+.romantic-texture {
+  background-image: 
+    radial-gradient(circle at 2px 2px, rgba(225, 29, 72, 0.1) 1px, transparent 0),
+    radial-gradient(circle at 8px 8px, rgba(236, 72, 153, 0.08) 1px, transparent 0);
+  background-size: 20px 20px, 40px 40px;
+}
+
+/* Cinematic pastel section - Cute and soft */
+.cinematic-dark {
+  background: linear-gradient(135deg, #fff5f8 0%, #ffeef2 25%, #ffe8ed 50%, #ffeef2 75%, #fff5f8 100%);
+  color: #4a4a4a;
+  position: relative;
+  overflow: hidden;
+}
+
+.cinematic-dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 192, 203, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 218, 225, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+  animation: pulse-glow-bg 8s ease-in-out infinite;
+}
+
+@keyframes pulse-glow-bg {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Glass morphism - Enhanced Modern */
+.glass-modern {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 182, 193, 0.5);
+  box-shadow: 
+    0 8px 32px rgba(255, 182, 193, 0.3),
+    0 2px 8px rgba(255, 192, 203, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
+.glass-modern:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 12px 48px rgba(255, 182, 193, 0.4),
+    0 4px 16px rgba(255, 192, 203, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+}
+
+/* Animated glass effect */
+@keyframes glass-shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.glass-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: glass-shimmer 3s infinite;
+}
+
+/* Modern Typography - Bold and Impactful */
+.modern-headline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.modern-subheadline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.modern-body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Editorial typography mix - Kept for compatibility */
+.editorial-headline {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.editorial-body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* 3D floating effect */
+.float-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.float-3d-element {
+  transform: translateZ(20px);
+  transition: transform 0.3s ease;
+}
+
+.float-3d:hover .float-3d-element {
+  transform: translateZ(40px) rotateY(5deg);
+}
+
+/* Asymmetrical grid */
+.asymmetrical-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  grid-auto-rows: auto;
+}
+
+.asymmetrical-grid > *:nth-child(3n+1) {
+  grid-row: span 2;
+}
+
+.asymmetrical-grid > *:nth-child(5n) {
+  grid-column: span 2;
+}
+
+/* Romantic glow effect - Pastel */
+.romantic-glow {
+  box-shadow: 
+    0 0 20px rgba(255, 182, 193, 0.4),
+    0 0 40px rgba(255, 192, 203, 0.3),
+    0 0 60px rgba(255, 218, 225, 0.2);
+}
+
+/* Scroll reveal animation */
+@keyframes scroll-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.scroll-reveal {
+  animation: scroll-reveal 0.8s ease-out forwards;
+}
+
+/* Dynamic particle connection lines */
+@keyframes line-draw {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0.1;
+  }
+}
+
+/* Enhanced hover effects with 3D transform */
+.hover-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.hover-3d:hover {
+  transform: translateY(-5px) rotateX(2deg) rotateY(-2deg);
+}
+
+/* Magnetic button effect */
+.magnetic-button {
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.magnetic-button:hover {
+  transform: scale(1.05);
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: pageFadeIn 0.6s ease-out;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, #ffeef2, #ffe8ed);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffb3d9, #ff91c7);
+  border-radius: 999px;
+  box-shadow: inset 0 0 6px rgba(255, 182, 193, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffcce6, #ffb3d9);
+  box-shadow: inset 0 0 6px rgba(255, 182, 193, 0.8);
+}
+
+/* Floating animation for decorative elements */
+@keyframes float-dynamic {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-25px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-15px) rotate(-2deg);
+  }
+}
+
+.float-dynamic {
+  animation: float-dynamic 6s ease-in-out infinite;
+}
+
+/* Shimmer effect for text */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 182, 193, 0.8) 0%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 182, 193, 0.8) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Enhanced glow effects */
+.glow-pink {
+  box-shadow: 
+    0 0 20px rgba(255, 182, 193, 0.5),
+    0 0 40px rgba(255, 182, 193, 0.3),
+    0 0 60px rgba(255, 192, 203, 0.2);
+}
+
+.glow-pink-strong {
+  box-shadow: 
+    0 0 30px rgba(255, 182, 193, 0.8),
+    0 0 60px rgba(255, 182, 193, 0.5),
+    0 0 90px rgba(255, 192, 203, 0.3);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 30px rgba(255, 182, 193, 0.8),
+      0 0 60px rgba(255, 182, 193, 0.5),
+      0 0 90px rgba(255, 192, 203, 0.3);
+  }
+  50% {
+    box-shadow: 
+      0 0 40px rgba(255, 182, 193, 1),
+      0 0 80px rgba(255, 182, 193, 0.7),
+      0 0 120px rgba(255, 192, 203, 0.5);
+  }
+}
+
