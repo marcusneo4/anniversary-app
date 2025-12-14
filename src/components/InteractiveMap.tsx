@@ -303,8 +303,8 @@ export function InteractiveMap() {
     const regionCountries = countriesByRegion[region] || [];
     return regionCountries
       .filter(country =>
-        country.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !visitedCountries.some(vc => vc.name === country.name)
+    country.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    !visitedCountries.some(vc => vc.name === country.name)
       )
       .sort((a, b) => a.name.localeCompare(b.name));
   };
@@ -371,18 +371,18 @@ export function InteractiveMap() {
                     <g className="marker-pin" style={{ transition: 'transform 0.2s' }}>
                       <path
                         d="M 0,0 L -2,-8 L 2,-8 Z"
-                        fill="#ec4899"
-                        stroke="#ffffff"
+                      fill="#ec4899"
+                      stroke="#ffffff"
                         strokeWidth="0.5"
-                      />
-                      <circle
+                    />
+                    <circle
                         cx={0}
                         cy={0}
                         r={1.5}
                         fill="#ec4899"
                         stroke="#ffffff"
                         strokeWidth="0.5"
-                      />
+                    />
                     </g>
                     {/* Country name label - only show on hover */}
                     <text
@@ -465,8 +465,8 @@ export function InteractiveMap() {
                     className="w-full rounded-lg border-2 border-rose-200 px-4 py-2 focus:border-rose-400 focus:outline-none mb-2"
                   />
                   
-                  <div className="max-h-60 overflow-y-auto border-2 border-rose-200 rounded-lg mt-2">
-                    {filteredCountries.length > 0 ? (
+                    <div className="max-h-60 overflow-y-auto border-2 border-rose-200 rounded-lg mt-2">
+                      {filteredCountries.length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-1 p-2">
                         {filteredCountries.map((country) => (
                           <button
@@ -485,18 +485,18 @@ export function InteractiveMap() {
                           </button>
                         ))}
                       </div>
-                    ) : (
-                      <div className="px-4 py-2 text-rose-600">
+                      ) : (
+                        <div className="px-4 py-2 text-rose-600">
                         {searchQuery && visitedCountries.some(vc => 
-                          vc.name.toLowerCase().includes(searchQuery.toLowerCase())
-                        ) 
-                          ? "Country already added" 
+                            vc.name.toLowerCase().includes(searchQuery.toLowerCase())
+                          ) 
+                            ? "Country already added" 
                           : searchQuery
                           ? "No countries found"
                           : `Select a country from ${selectedRegion} or search above`}
-                      </div>
-                    )}
-                  </div>
+                        </div>
+                      )}
+                    </div>
                   
                   {selectedCountryName && (
                     <div className="mt-2 p-2 bg-rose-50 rounded-lg flex items-center justify-between">
