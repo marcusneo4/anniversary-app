@@ -20,10 +20,13 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   useEffect(() => {
-    const saved = loadHero();
-    if (saved) {
-      setContent(saved);
-    }
+    const loadData = async () => {
+      const saved = await loadHero();
+      if (saved) {
+        setContent(saved);
+      }
+    };
+    loadData();
   }, []);
 
   return (

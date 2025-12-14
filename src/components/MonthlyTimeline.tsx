@@ -16,17 +16,20 @@ export function MonthlyTimeline() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
   useEffect(() => {
-    const saved = loadMonthlyTimeline();
-    if (Object.keys(saved).length > 0) {
-      setEntries(saved);
-    } else {
-      // Initialize with empty entries for each month
-      const initialEntries: Record<number, MonthlyTimelineEntry[]> = {};
-      months.forEach((_, index) => {
-        initialEntries[index] = monthlyTimelineData[index] || [];
-      });
-      setEntries(initialEntries);
-    }
+    const loadData = async () => {
+      const saved = await loadMonthlyTimeline();
+      if (Object.keys(saved).length > 0) {
+        setEntries(saved);
+      } else {
+        // Initialize with empty entries for each month
+        const initialEntries: Record<number, MonthlyTimelineEntry[]> = {};
+        months.forEach((_, index) => {
+          initialEntries[index] = monthlyTimelineData[index] || [];
+        });
+        setEntries(initialEntries);
+      }
+    };
+    loadData();
   }, []);
 
   const currentMonthEntries = entries[selectedMonth] || [];

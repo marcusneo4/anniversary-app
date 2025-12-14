@@ -7,12 +7,15 @@ export function Timeline() {
   const [milestones, setMilestones] = useState<TimelineMilestone[]>(timelineMilestones);
 
   useEffect(() => {
-    const saved = loadTimeline();
-    if (saved.length > 0) {
-      setMilestones(saved);
-    } else {
-      setMilestones(timelineMilestones);
-    }
+    const loadData = async () => {
+      const saved = await loadTimeline();
+      if (saved.length > 0) {
+        setMilestones(saved);
+      } else {
+        setMilestones(timelineMilestones);
+      }
+    };
+    loadData();
   }, []);
 
   return (

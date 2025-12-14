@@ -11,10 +11,13 @@ export function ClosingToast({ isUnlocked, onPlayNext }: ClosingToastProps) {
   const [content, setContent] = useState<ClosingToastContent>(closingToast);
 
   useEffect(() => {
-    const saved = loadClosing();
-    if (saved) {
-      setContent(saved);
-    }
+    const loadData = async () => {
+      const saved = await loadClosing();
+      if (saved) {
+        setContent(saved);
+      }
+    };
+    loadData();
   }, []);
 
   return (

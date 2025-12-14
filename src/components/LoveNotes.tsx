@@ -8,12 +8,15 @@ export function LoveNotes() {
   const [notes, setNotes] = useState<LoveNote[]>(loveNotes);
 
   useEffect(() => {
-    const saved = loadLoveNotes();
-    if (saved.length > 0) {
-      setNotes(saved);
-    } else {
-      setNotes(loveNotes);
-    }
+    const loadData = async () => {
+      const saved = await loadLoveNotes();
+      if (saved.length > 0) {
+        setNotes(saved);
+      } else {
+        setNotes(loveNotes);
+      }
+    };
+    loadData();
   }, []);
 
   return (
