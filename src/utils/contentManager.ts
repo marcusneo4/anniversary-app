@@ -6,7 +6,6 @@ import type {
   ClosingToastContent,
   MonthlyTimelineEntry
 } from "../data/content";
-import * as firebaseService from "./firebaseService";
 
 const STORAGE_KEYS = {
   GALLERY: "anniversary_gallery",
@@ -17,45 +16,8 @@ const STORAGE_KEYS = {
   MONTHLY_TIMELINE: "anniversary_monthly_timeline"
 };
 
-// Check if Firebase is configured
-const isFirebaseConfigured = () => {
-  const apiKey = import.meta.env.VITE_FIREBASE_API_KEY;
-  return apiKey && apiKey !== "your-api-key";
-};
-
-// Load content from Firebase or localStorage fallback
+// Load content from localStorage
 export async function loadContent<T>(key: string, defaultValue: T): Promise<T> {
-  if (isFirebaseConfigured()) {
-    try {
-      // Try Firebase first
-      switch (key) {
-        case STORAGE_KEYS.GALLERY:
-          const gallery = await firebaseService.loadGallery();
-          return (gallery.length > 0 ? gallery : defaultValue) as T;
-        case STORAGE_KEYS.TIMELINE:
-          const timeline = await firebaseService.loadTimeline();
-          return (timeline.length > 0 ? timeline : defaultValue) as T;
-        case STORAGE_KEYS.LOVENOTES:
-          const notes = await firebaseService.loadLoveNotes();
-          return (notes.length > 0 ? notes : defaultValue) as T;
-        case STORAGE_KEYS.HERO:
-          const hero = await firebaseService.loadHero();
-          return (hero || defaultValue) as T;
-        case STORAGE_KEYS.CLOSING:
-          const closing = await firebaseService.loadClosing();
-          return (closing || defaultValue) as T;
-        case STORAGE_KEYS.MONTHLY_TIMELINE:
-          const monthly = await firebaseService.loadMonthlyTimeline();
-          return (Object.keys(monthly).length > 0 ? monthly : defaultValue) as T;
-        default:
-          return defaultValue;
-      }
-    } catch (error) {
-      console.error(`Error loading ${key} from Firebase, falling back to localStorage:`, error);
-    }
-  }
-  
-  // Fallback to localStorage
   try {
     const stored = localStorage.getItem(key);
     if (stored) {
@@ -67,39 +29,8 @@ export async function loadContent<T>(key: string, defaultValue: T): Promise<T> {
   return defaultValue;
 }
 
-// Save content to Firebase or localStorage fallback
+// Save content to localStorage
 export async function saveContent<T>(key: string, content: T): Promise<void> {
-  if (isFirebaseConfigured()) {
-    try {
-      // Try Firebase first
-      switch (key) {
-        case STORAGE_KEYS.GALLERY:
-          await firebaseService.saveGallery(content as any);
-          return;
-        case STORAGE_KEYS.TIMELINE:
-          await firebaseService.saveTimeline(content as any);
-          return;
-        case STORAGE_KEYS.LOVENOTES:
-          await firebaseService.saveLoveNotes(content as any);
-          return;
-        case STORAGE_KEYS.HERO:
-          await firebaseService.saveHero(content as any);
-          return;
-        case STORAGE_KEYS.CLOSING:
-          await firebaseService.saveClosing(content as any);
-          return;
-        case STORAGE_KEYS.MONTHLY_TIMELINE:
-          await firebaseService.saveMonthlyTimeline(content as any);
-          return;
-        default:
-          break;
-      }
-    } catch (error) {
-      console.error(`Error saving ${key} to Firebase, falling back to localStorage:`, error);
-    }
-  }
-  
-  // Fallback to localStorage
   try {
     localStorage.setItem(key, JSON.stringify(content));
   } catch (error) {
@@ -107,7 +38,7 @@ export async function saveContent<T>(key: string, content: T): Promise<void> {
   }
 }
 
-// Content loaders (async versions for Firebase)
+// Content loaders
 export async function loadGallery(): Promise<GalleryMoment[]> {
   return await loadContent(STORAGE_KEYS.GALLERY, []);
 }
@@ -162,4 +93,3 @@ export function resetAllContent(): void {
     localStorage.removeItem(key);
   });
 }
-

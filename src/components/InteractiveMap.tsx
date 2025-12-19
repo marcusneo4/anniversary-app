@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { loadCountries, saveCountries } from "../utils/firebaseService";
+import { loadCountries, saveCountries } from "../utils/storageService";
 
 // Helper function to convert lat/lng to SVG coordinates
 // Using equirectangular projection for simplicity
@@ -257,22 +257,22 @@ export function InteractiveMap() {
   const svgWidth = 360;
   const svgHeight = 180;
 
-  // Load from Firebase or localStorage, always merge with defaults
+  // Load from localStorage, always merge with defaults
   useEffect(() => {
     const loadData = async () => {
       let saved: VisitedCountry[] = [];
       
       try {
-        // Try Firebase first
-        const firebaseCountries = await loadCountries();
-        if (firebaseCountries.length > 0) {
-          saved = firebaseCountries;
+        // Try storage service first
+        const savedCountries = await loadCountries();
+        if (savedCountries.length > 0) {
+          saved = savedCountries;
         }
       } catch (e) {
-        console.log("Firebase not configured, trying localStorage");
+        console.log("Error loading from storage, trying localStorage directly");
       }
       
-      // Fallback to localStorage if Firebase didn't return data
+      // Fallback to localStorage if storage didn't return data
       if (saved.length === 0) {
         const localStorageData = localStorage.getItem("visitedCountries");
         if (localStorageData) {
@@ -297,7 +297,7 @@ export function InteractiveMap() {
         try {
           await saveCountries(mergedCountries);
         } catch (e) {
-          // If Firebase fails, localStorage will be saved by the save effect
+          // Fallback to localStorage
           localStorage.setItem("visitedCountries", JSON.stringify(mergedCountries));
         }
       }
@@ -305,7 +305,7 @@ export function InteractiveMap() {
     loadData();
   }, []);
 
-  // Save to Firebase or localStorage (excluding defaults since they're always there)
+  // Save to localStorage
   useEffect(() => {
     const saveData = async () => {
       // Only save non-default countries
@@ -314,7 +314,7 @@ export function InteractiveMap() {
       
       if (countriesToSave.length > 0 || visitedCountries.length > 0) {
         try {
-          // Try Firebase first - save all countries including defaults for consistency
+          // Save all countries including defaults for consistency
           const saved = await saveCountries(visitedCountries);
           if (saved) {
             setJustSaved(true);
@@ -322,10 +322,10 @@ export function InteractiveMap() {
             return;
           }
         } catch (e) {
-          console.log("Firebase not configured, using localStorage");
+          console.log("Error saving to storage");
         }
         
-        // Fallback to localStorage - save all countries
+        // Fallback to localStorage directly
         localStorage.setItem("visitedCountries", JSON.stringify(visitedCountries));
         setJustSaved(true);
         setTimeout(() => setJustSaved(false), 2000);

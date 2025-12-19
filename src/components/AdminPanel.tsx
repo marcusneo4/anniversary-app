@@ -29,7 +29,7 @@ import {
   saveMonthlyTimeline,
   resetAllContent
 } from "../utils/contentManager";
-import { convertImageToBase64 } from "../utils/firebaseService";
+import { convertImageToBase64 } from "../utils/imageUtils";
 import { resolvePublicAssetUrl } from "../utils/assetUrl";
 
 type AdminPanelProps = {
@@ -149,7 +149,7 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
     reader.readAsDataURL(file);
   };
 
-  // Handle gallery image upload (converts to base64 - stored in Firestore, FREE!)
+  // Handle gallery image upload (converts to base64 - stored in localStorage)
   const handleGalleryImageUpload = async (id: number, file: File) => {
     const base64 = await convertImageToBase64(file);
     if (base64) {
@@ -159,7 +159,7 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
     }
   };
 
-  // Handle monthly timeline image upload (converts to base64 - stored in Firestore, FREE!)
+  // Handle monthly timeline image upload (converts to base64 - stored in localStorage)
   const handleMonthlyImageUpload = async (entryId: number, file: File) => {
     const base64 = await convertImageToBase64(file);
     if (base64) {
