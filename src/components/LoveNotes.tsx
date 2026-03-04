@@ -61,7 +61,7 @@ export function LoveNotes() {
   };
 
   const setZoomState = (key: string, state: ZoomState) => {
-    setZoomStates(prev => ({ ...prev, [key]: state }));
+    setZoomStates((prev) => ({ ...prev, [key]: state }));
   };
 
   const handleWheel = (e: React.WheelEvent, key: string) => {
@@ -97,11 +97,12 @@ export function LoveNotes() {
 
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging && draggingKey) {
-      const currentState = getZoomState(draggingKey);
-      setZoomState(draggingKey, {
-        ...currentState,
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y,
+      setZoomStates((prev) => {
+        const current = prev[draggingKey] || { scale: 1, x: 0, y: 0 };
+        return {
+          ...prev,
+          [draggingKey]: { ...current, x: e.clientX - dragStart.x, y: e.clientY - dragStart.y },
+        };
       });
     }
   };

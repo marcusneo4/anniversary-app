@@ -34,7 +34,12 @@ export async function saveContent<T>(key: string, content: T): Promise<void> {
   try {
     localStorage.setItem(key, JSON.stringify(content));
   } catch (error) {
-    console.error(`Error saving ${key}:`, error);
+    const isQuotaExceeded = error instanceof DOMException && error.name === "QuotaExceededError";
+    if (isQuotaExceeded) {
+      console.warn(`Storage quota exceeded for ${key}. Consider using fewer/smaller images.`);
+    } else {
+      console.error(`Error saving ${key}:`, error);
+    }
   }
 }
 

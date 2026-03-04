@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Sidebar, type SidebarTab } from "./components/Sidebar";
 import { Hero } from "./components/Hero";
 import { MonthlyTimeline } from "./components/MonthlyTimeline";
@@ -7,7 +7,6 @@ import { LoveNotes } from "./components/LoveNotes";
 import { PuzzleUnlock } from "./components/PuzzleUnlock";
 import { ClosingToast } from "./components/ClosingToast";
 import { AmbientAudioToggle } from "./components/AmbientAudioToggle";
-import { SparkleBackdrop } from "./components/SparkleBackdrop";
 import { ShareCard } from "./components/ShareCard";
 import { EditButton } from "./components/EditButton";
 import { CountdownTimer } from "./components/CountdownTimer";
@@ -16,7 +15,7 @@ import { CompatibilityQuiz } from "./components/CompatibilityQuiz";
 import { LoveLetterGenerator } from "./components/LoveLetterGenerator";
 import { DateIdeasGenerator } from "./components/DateIdeasGenerator";
 import { RelationshipStats } from "./components/RelationshipStats";
-import { InteractiveMap } from "./components/InteractiveMap";
+const InteractiveMap = lazy(() => import("./components/InteractiveMap").then((m) => ({ default: m.InteractiveMap })));
 import { FavoriteThings } from "./components/FavoriteThings";
 import { FloatingParticles } from "./components/FloatingParticles";
 import { ScrollProgress } from "./components/ScrollProgress";
@@ -112,7 +111,11 @@ export default function App() {
       case "stats":
         return <RelationshipStats />;
       case "map":
-        return <InteractiveMap />;
+        return (
+          <Suspense fallback={<div className="flex min-h-[50vh] items-center justify-center text-rose-500">Loading map...</div>}>
+            <InteractiveMap />
+          </Suspense>
+        );
       default:
         return null;
     }

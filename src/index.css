@@ -22,22 +22,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #ffeef2;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ffb3d9, #ff91c7);
-  border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ffcce6, #ffb3d9);
-}
+/* Scrollbar styles (consolidated - no duplicates below) */
 
 .sparkle {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 60%);
@@ -202,9 +187,9 @@ html {
   }
 }
 
-/* Smooth transitions */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+/* Smooth transitions - applied selectively to interactive elements, not globally (avoids performance jank) */
+button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .transition-all {
+  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -457,9 +442,9 @@ html {
   }
 }
 
-/* Enhanced scrollbar */
+/* Enhanced scrollbar (consolidated) */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {

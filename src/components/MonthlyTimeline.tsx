@@ -45,7 +45,7 @@ export function MonthlyTimeline() {
           await saveMonthlyTimeline(mergedEntries);
         } catch (e) {
           // If save fails, it's okay - defaults will still show
-          console.log("Could not save monthly timeline defaults", e);
+          // Save failed; defaults still display
         }
       }
     };
@@ -157,12 +157,12 @@ export function MonthlyTimeline() {
                         const target = e.currentTarget as HTMLImageElement;
                         target.style.display = "none";
                         const parent = target.parentElement;
-                        if (parent) {
-                          parent.innerHTML = `
-                            <div class="flex h-full items-center justify-center bg-rose-50 text-sm text-rose-400">
-                              <span>Image not found</span>
-                            </div>
-                          `;
+                        if (parent && !parent.querySelector("[data-image-fallback]")) {
+                          const fallback = document.createElement("div");
+                          fallback.setAttribute("data-image-fallback", "");
+                          fallback.className = "flex h-full items-center justify-center bg-rose-50 text-sm text-rose-400";
+                          fallback.textContent = "Image not found";
+                          parent.appendChild(fallback);
                         }
                       }}
                     />

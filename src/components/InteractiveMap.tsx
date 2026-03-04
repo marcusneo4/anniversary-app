@@ -269,7 +269,7 @@ export function InteractiveMap() {
           saved = savedCountries;
         }
       } catch (e) {
-        console.log("Error loading from storage, trying localStorage directly");
+        // Fallback to localStorage
       }
       
       // Fallback to localStorage if storage didn't return data
@@ -322,7 +322,7 @@ export function InteractiveMap() {
             return;
           }
         } catch (e) {
-          console.log("Error saving to storage");
+          // Fallback to localStorage
         }
         
         // Fallback to localStorage directly

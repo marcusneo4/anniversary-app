@@ -236,7 +236,7 @@ export function MemoryGallery() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[90vh] max-w-5xl"
+              className="relative max-h-[90vh] w-full max-w-5xl"
             >
               <button
                 onClick={closeLightbox}
@@ -249,7 +249,7 @@ export function MemoryGallery() {
               {isVideo(selectedMoment.image) ? (
                 <video
                   src={resolvePublicAssetUrl(selectedMoment.image)}
-                  className="max-h-[90vh] rounded-2xl"
+                  className="max-h-[90vh] max-w-full w-auto rounded-2xl object-contain"
                   controls
                   autoPlay
                 />
@@ -257,7 +257,7 @@ export function MemoryGallery() {
                 <img
                   src={resolvePublicAssetUrl(selectedMoment.image)}
                   alt={selectedMoment.alt}
-                  className="max-h-[90vh] rounded-2xl"
+                  className="max-h-[90vh] max-w-full w-auto rounded-2xl object-contain"
                 />
               )}
               <div className="mt-4 rounded-2xl bg-white/10 p-4 text-center backdrop-blur-sm">
