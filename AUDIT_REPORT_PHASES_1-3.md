@@ -117,3 +117,21 @@
 ## Next Steps
 
 All phases complete. Changes committed.
+
+---
+
+## Post-Commit: Browser Test (Exploration Agent)
+
+### Issues Found & Fixed
+
+| Issue | Fix |
+|-------|-----|
+| **Framer-motion gap animation error** | `Sidebar.tsx`: Use `style={{ gap }}` instead of `animate` (gap "normal" not animatable) |
+| **Tab content not switching** | `App.tsx`: Change `AnimatePresence mode="wait"` to `mode="sync"` — "wait" could block new content in some environments |
+| **Potential layout overflow** | `App.tsx`: Add `overflow-x-hidden` to main |
+
+### Verified Working
+
+- Tab navigation (Gallery, etc.) loads correct content
+- Admin panel (Ctrl+K), tabs, Escape
+- Gallery filters (All, Photos, Videos), layout (Grid, Masonry)

@@ -205,16 +205,17 @@ export default function App() {
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} onToggle={setIsSidebarOpen} />
       
       <main 
-        className="min-h-screen transition-all duration-500 relative z-10"
+        className="min-h-screen transition-all duration-500 relative z-10 overflow-x-hidden"
         style={{ 
           marginLeft: isDesktop 
             ? (isSidebarOpen ? '18rem' : '3rem')
             : '0',
           willChange: 'margin-left'
         }}
+        data-active-tab={activeTab}
       >
         <div className="min-h-screen">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 30, scale: 0.98 }}

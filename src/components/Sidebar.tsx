@@ -124,7 +124,11 @@ export function Sidebar({ activeTab, onTabChange, onToggle }: SidebarProps) {
             >
               <motion.div
                 className="flex items-center"
-                animate={{ justifyContent: isOpen ? "flex-start" : "center", gap: isOpen ? 12 : 0 }}
+                initial={false}
+                animate={{
+                  justifyContent: isOpen ? "flex-start" : "center",
+                }}
+                style={{ gap: isOpen ? 12 : 0 }}
               >
                 <span className="text-xl flex-shrink-0">{tab.icon}</span>
                 <motion.span
