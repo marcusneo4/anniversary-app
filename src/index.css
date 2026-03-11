@@ -5,16 +5,28 @@
 @tailwind utilities;
 
 :root {
-  color: #4a4a4a;
-  background-color: #fef7f7;
+  /* ui-master: 60-30-10 — no pure black/white */
+  --color-base: #FAFAF9;
+  --color-surface: #F5F0F0;
+  --color-accent: #e91e63;
+  --color-ink: #1A1A1A;
+  --color-ink-muted: #4A4A4A;
+  --color-off-white: #FFFBFB;
+  --ease-snap: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-organic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --touch-min: 2.75rem;
+
+  color: var(--color-ink-muted);
+  background-color: var(--color-base);
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #fff5f8 0%, #ffeef2 25%, #ffe8ed 50%, #ffe5eb 75%, #fff5f8 100%);
-  color: #4a4a4a;
+  background: linear-gradient(135deg, #FEF7F7 0%, #FBF0F2 25%, #F8E8EC 50%, #FBF0F2 75%, #FEF7F7 100%);
+  color: var(--color-ink-muted);
   overflow-x: hidden;
   /* Performance optimizations */
   -webkit-font-smoothing: antialiased;
@@ -44,12 +56,10 @@ html {
   -webkit-transform: translateZ(0);
 }
 
-/* Optimize scrolling performance */
-* {
+/* Scrolling: only apply backface-visibility to elements that need 3D transforms (avoids breaking animations) */
+.parallax-slow, .float-3d, .float-3d-element, .hover-3d {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  -webkit-perspective: 1000;
-  perspective: 1000;
 }
 
 /* Enhanced animations */
@@ -81,7 +91,7 @@ html {
 
 /* Enhanced hover effects */
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.35s var(--ease-snap), box-shadow 0.35s var(--ease-snap);
 }
 
 .hover-lift:hover {
@@ -159,7 +169,7 @@ html {
   width: 200%;
   height: 200%;
   background: radial-gradient(circle, rgba(255, 182, 193, 0.2) 0%, transparent 70%);
-  animation: rotate-gradient 20s linear infinite;
+  animation: rotate-gradient 20s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes rotate-gradient {
@@ -190,8 +200,17 @@ html {
 /* Smooth transitions - applied selectively to interactive elements, not globally (avoids performance jank) */
 button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .transition-all {
   transition-property: color, background-color, border-color, opacity, box-shadow, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  transition-timing-function: var(--ease-snap);
+  transition-duration: 200ms;
+}
+
+/* WCAG: Focus-visible rings for keyboard users */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid rgba(236, 72, 153, 0.7);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
 }
 
 /* Hand-drawn decorative elements */
@@ -223,8 +242,8 @@ button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .tran
 
 /* Cinematic pastel section - Cute and soft */
 .cinematic-dark {
-  background: linear-gradient(135deg, #fff5f8 0%, #ffeef2 25%, #ffe8ed 50%, #ffeef2 75%, #fff5f8 100%);
-  color: #4a4a4a;
+  background: linear-gradient(135deg, #FEF7F7 0%, #FBF0F2 25%, #F8E8EC 50%, #FBF0F2 75%, #FEF7F7 100%);
+  color: var(--color-ink-muted);
   position: relative;
   overflow: hidden;
 }
@@ -251,22 +270,22 @@ button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .tran
 
 /* Glass morphism - Enhanced Modern */
 .glass-modern {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(250, 250, 249, 0.92);
   backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid rgba(255, 182, 193, 0.5);
+  border: 1px solid rgba(255, 182, 193, 0.4);
   box-shadow: 
-    0 8px 32px rgba(255, 182, 193, 0.3),
-    0 2px 8px rgba(255, 192, 203, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  transition: all 0.3s ease;
+    0 8px 32px rgba(236, 72, 153, 0.12),
+    0 2px 8px rgba(244, 63, 94, 0.08),
+    inset 0 1px 0 rgba(255, 251, 251, 0.95);
+  transition: transform 0.35s var(--ease-snap), box-shadow 0.35s var(--ease-snap), background 0.35s var(--ease-snap);
 }
 
 .glass-modern:hover {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 251, 251, 0.97);
   box-shadow: 
-    0 12px 48px rgba(255, 182, 193, 0.4),
-    0 4px 16px rgba(255, 192, 203, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 1);
+    0 12px 40px rgba(236, 72, 153, 0.18),
+    0 4px 14px rgba(244, 63, 94, 0.1),
+    inset 0 1px 0 rgba(255, 251, 251, 1);
   transform: translateY(-2px);
 }
 
@@ -295,10 +314,10 @@ button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .tran
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.3),
+    rgba(255, 251, 251, 0.35),
     transparent
   );
-  animation: glass-shimmer 3s infinite;
+  animation: glass-shimmer 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* Modern Typography - Bold and Impactful */
@@ -344,7 +363,7 @@ button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .tran
 
 .float-3d-element {
   transform: translateZ(20px);
-  transition: transform 0.3s ease;
+  transition: transform 0.35s var(--ease-snap);
 }
 
 .float-3d:hover .float-3d-element {
@@ -409,7 +428,7 @@ button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .tran
 /* Enhanced hover effects with 3D transform */
 .hover-3d {
   transform-style: preserve-3d;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s var(--ease-organic);
 }
 
 .hover-3d:hover {
@@ -419,7 +438,7 @@ button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .tran
 /* Magnetic button effect */
 .magnetic-button {
   position: relative;
-  transition: transform 0.2s ease;
+  transition: transform 0.25s var(--ease-organic);
 }
 
 .magnetic-button:hover {
@@ -496,14 +515,14 @@ button, a, input, select, textarea, .hover-lift, .hover-3d, .glass-modern, .tran
   background: linear-gradient(
     90deg,
     rgba(255, 182, 193, 0.8) 0%,
-    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 251, 251, 1) 50%,
     rgba(255, 182, 193, 0.8) 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 3s linear infinite;
+  animation: shimmer 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 /* Enhanced glow effects */

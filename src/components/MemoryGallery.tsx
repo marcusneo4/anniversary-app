@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { galleryMoments, type GalleryMoment } from "../data/content";
 import { loadGallery, saveGallery } from "../utils/contentManager";
@@ -30,6 +31,30 @@ export function MemoryGallery() {
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!lightboxOpen) {
+      return;
+    }
+
+    const { scrollY } = window;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+
+    window.scrollTo(0, 0);
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [lightboxOpen]);
 
   const openLightbox = (moment: GalleryMoment) => {
     setSelectedMoment(moment);
@@ -163,15 +188,16 @@ export function MemoryGallery() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className={`group relative overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-rose-100/70 transition-all hover:scale-[1.02] hover:shadow-xl ${
+                className={`group relative overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-rose-100/70 transition-all hover:scale-[1.02] hover:shadow-xl cursor-pointer ${
                   layout === "masonry" ? "mb-6 break-inside-avoid" : ""
                 }`}
+                onClick={() => openLightbox(moment)}
               >
                 <div className="relative h-64 overflow-hidden rounded-t-3xl bg-gradient-to-br from-rose-100 to-rose-200">
                   {isVid ? (
                     <video
                       src={mediaSrc}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover object-center"
                       loop
                       muted
                       playsInline
@@ -182,7 +208,7 @@ export function MemoryGallery() {
                     <img
                       src={mediaSrc}
                       alt={moment.alt}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                       onError={() =>
                         setMissingImages((prev) => ({
@@ -208,10 +234,7 @@ export function MemoryGallery() {
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
-                <div
-                  className="space-y-2 p-6 cursor-pointer"
-                  onClick={() => openLightbox(moment)}
-                >
+                <div className="space-y-2 p-6">
                   <p className="text-lg text-rose-800 line-clamp-2">{moment.caption}</p>
                   <p className="text-sm uppercase tracking-[0.3em] text-rose-400">#{moment.id}</p>
                 </div>
@@ -221,52 +244,58 @@ export function MemoryGallery() {
         </div>
       </section>
 
-      {/* Lightbox */}
-      <AnimatePresence>
-        {lightboxOpen && selectedMoment && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
-            onClick={closeLightbox}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[90vh] w-full max-w-5xl"
-            >
-              <button
+      {/* Lightbox - portaled to body to avoid overflow clipping */}
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {lightboxOpen && selectedMoment && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
                 onClick={closeLightbox}
-                className="absolute -top-12 right-0 rounded-full bg-white/20 p-2 text-white transition hover:bg-white/30"
               >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-              {isVideo(selectedMoment.image) ? (
-                <video
-                  src={resolvePublicAssetUrl(selectedMoment.image)}
-                  className="max-h-[90vh] max-w-full w-auto rounded-2xl object-contain"
-                  controls
-                  autoPlay
-                />
-              ) : (
-                <img
-                  src={resolvePublicAssetUrl(selectedMoment.image)}
-                  alt={selectedMoment.alt}
-                  className="max-h-[90vh] max-w-full w-auto rounded-2xl object-contain"
-                />
-              )}
-              <div className="mt-4 rounded-2xl bg-white/10 p-4 text-center backdrop-blur-sm">
-                <p className="text-lg text-white">{selectedMoment.caption}</p>
-              </div>
-            </motion.div>
-          </motion.div>
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative max-h-[90vh] w-full max-w-5xl flex flex-col items-center justify-center"
+                >
+                  <button
+                    type="button"
+                    onClick={closeLightbox}
+                    className="absolute -top-12 right-0 rounded-full bg-white/20 p-2 text-white transition hover:bg-white/30"
+                    aria-label="Close"
+                  >
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  {isVideo(selectedMoment.image) ? (
+                    <video
+                      src={resolvePublicAssetUrl(selectedMoment.image)}
+                      className="max-h-[90vh] max-w-full w-auto rounded-2xl object-contain"
+                      controls
+                      autoPlay
+                    />
+                  ) : (
+                    <img
+                      src={resolvePublicAssetUrl(selectedMoment.image)}
+                      alt={selectedMoment.alt}
+                      className="max-h-[85vh] max-w-full w-auto rounded-2xl object-contain"
+                    />
+                  )}
+                  <div className="mt-4 rounded-2xl bg-white/10 p-4 text-center backdrop-blur-sm max-w-full">
+                    <p className="text-lg text-white">{selectedMoment.caption}</p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }

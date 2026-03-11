@@ -26,6 +26,12 @@ import { CursorTrail } from "./components/CursorTrail";
 import { LoveLetter } from "./components/LoveLetter";
 import { motion, AnimatePresence } from "framer-motion";
 
+/**
+ * Root application component responsible for orchestrating global layout,
+ * navigation between feature tabs, and the ambient visual experience.
+ *
+ * @returns The fully composed anniversary experience application shell.
+ */
 export default function App() {
   const [activeTab, setActiveTab] = useState<SidebarTab>("home");
   const [isPuzzleSolved, setIsPuzzleSolved] = useState(false);
@@ -33,10 +39,7 @@ export default function App() {
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
     checkDesktop();
     window.addEventListener("resize", checkDesktop);
     return () => window.removeEventListener("resize", checkDesktop);
@@ -69,7 +72,7 @@ export default function App() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 }}
-                  className="font-bold text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-800 modern-headline mb-8 gradient-text neon-glow"
+                  className="mb-8 font-bold text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-ink-primary modern-headline gradient-text neon-glow"
                 >
                   Every Moment<br />Matters
                 </motion.h2>
@@ -78,7 +81,7 @@ export default function App() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.2 }}
-                  className="text-lg md:text-xl lg:text-2xl text-gray-800 modern-body max-w-3xl mx-auto leading-relaxed drop-shadow-sm"
+                  className="mx-auto max-w-3xl text-lg md:text-xl lg:text-2xl text-ink-primary modern-body leading-relaxed drop-shadow-sm"
                 >
                   From the first hello to forever, every second has been a chapter in our love story.
                 </motion.p>

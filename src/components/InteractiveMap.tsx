@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { loadCountries, saveCountries } from "../utils/storageService";
+import { resolvePublicAssetUrl } from "../utils/assetUrl";
 
 // Helper function to convert lat/lng to SVG coordinates
 // Using equirectangular projection for simplicity
@@ -254,8 +255,8 @@ export function InteractiveMap() {
   const [selectedRegion, setSelectedRegion] = useState<string>("Europe");
   const [justSaved, setJustSaved] = useState(false);
 
-  const svgWidth = 360;
-  const svgHeight = 180;
+  const svgWidth = 800;
+  const svgHeight = 400;
 
   // Load from localStorage, always merge with defaults
   useEffect(() => {
@@ -434,16 +435,16 @@ export function InteractiveMap() {
       {/* World Map Visualization */}
       <div className="mb-8 relative bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-4 md:p-8 border-2 border-rose-200/50 overflow-hidden">
         <div className="relative w-full" style={{ height: '500px', minHeight: '400px' }}>
-          {/* World Map Background Image */}
+          {/* World Map Background - equirectangular 800x400 to match marker coordinates */}
           <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Equirectangular_projection_SW.jpg/1024px-Equirectangular_projection_SW.jpg"
+              src={resolvePublicAssetUrl("/media/maps/world-map-light.svg")}
               alt="World Map"
               style={{
                 width: '100%',
                 height: '100%',
                 objectFit: 'contain',
-                opacity: 0.7,
+                opacity: 1,
               }}
             />
           </div>

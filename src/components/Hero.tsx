@@ -100,7 +100,7 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
           transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 15 }}
           className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] font-bold leading-[0.9] mb-8"
         >
-          <span className="block text-black modern-headline">
+          <span className="block text-ink-primary modern-headline">
             {content.heading.split(' ').map((word, i) => (
               <motion.span
                 key={i}
@@ -121,7 +121,7 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mx-auto mt-8 max-w-3xl text-xl md:text-2xl lg:text-3xl modern-body text-gray-800 leading-relaxed drop-shadow-sm"
+          className="mx-auto mt-8 max-w-3xl text-xl md:text-2xl lg:text-3xl modern-body text-ink-primary leading-relaxed drop-shadow-sm"
         >
           {content.subheading}
         </motion.p>
@@ -133,7 +133,7 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
           whileHover={{ scale: 1.02, y: -5 }}
           className="mx-auto mt-12 max-w-4xl rounded-2xl glass-modern glass-shimmer p-8 md:p-12 border border-pink-300/40"
         >
-          <p className="text-xl md:text-2xl lg:text-3xl modern-body italic leading-relaxed text-gray-800 drop-shadow-sm">
+          <p className="text-xl md:text-2xl lg:text-3xl modern-body italic leading-relaxed text-ink-primary drop-shadow-sm">
             "{content.dedication}"
           </p>
           <div className="mt-6 flex items-center justify-center gap-3">
@@ -152,12 +152,12 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
         >
           <motion.button
             whileHover={{ 
-              scale: 1.08, 
-              boxShadow: "0 25px 50px rgba(255, 182, 193, 0.6)",
+              scale: 1.05, 
+              boxShadow: "0 12px 28px rgba(236, 72, 153, 0.3), 0 4px 14px rgba(244, 63, 94, 0.15)",
               y: -2
             }}
-            whileTap={{ scale: 0.95 }}
-            className="rounded-full bg-gradient-to-r from-pink-400 to-rose-400 px-12 py-4 text-white text-lg font-semibold shadow-2xl transition-all relative overflow-hidden group"
+            whileTap={{ scale: 0.97 }}
+            className="relative min-h-[2.75rem] rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-10 py-4 text-lg font-semibold text-white shadow-tactile transition-shadow focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-400 focus-visible:outline-offset-2 group overflow-hidden"
             onClick={onPrimaryClick}
             animate={{
               boxShadow: [
@@ -167,9 +167,10 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
               ]
             }}
             transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
+              type: "spring",
+              stiffness: 400,
+              damping: 25,
+              boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
             }}
           >
             <span className="relative z-10">{content.ctaPrimary}</span>
@@ -193,9 +194,10 @@ export function Hero({ onPrimaryClick, onSecondaryClick }: HeroProps) {
             />
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.05, borderColor: "rgba(255, 182, 193, 0.8)", backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-            whileTap={{ scale: 0.95 }}
-            className="rounded-full border-2 border-pink-300/60 px-12 py-4 text-gray-700 text-lg font-semibold transition-all backdrop-blur-sm glass-modern"
+            whileHover={{ scale: 1.03, borderColor: "rgba(244, 63, 94, 0.5)", backgroundColor: "rgba(255, 251, 251, 0.95)" }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="min-h-[2.75rem] rounded-full border-2 border-pink-300/50 px-10 py-4 text-ink-primary text-lg font-semibold backdrop-blur-sm glass-modern focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-400 focus-visible:outline-offset-2"
             onClick={onSecondaryClick}
           >
             {content.ctaSecondary}

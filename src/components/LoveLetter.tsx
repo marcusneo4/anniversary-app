@@ -44,13 +44,17 @@ i just want to say im genuinely serious about you and i do see a long future wit
         {!isOpened ? (
           <motion.div
             key="envelope"
-            initial={{ opacity: 0, scale: 0.8 }}
+            role="button"
+            tabIndex={0}
+            initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8, rotate: -10 }}
-            className="relative cursor-pointer"
+            exit={{ opacity: 0, scale: 0.92, rotate: -8 }}
+            className="relative cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-400 focus-visible:outline-offset-4 focus-visible:rounded-lg"
             onClick={handleClick}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handleClick(); } }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 300, damping: 24 }}
           >
             {/* Envelope */}
             <motion.div
@@ -156,7 +160,7 @@ i just want to say im genuinely serious about you and i do see a long future wit
                 transition={{ delay: 0.5, duration: 1 }}
                 className="relative z-10"
               >
-                <div className="font-handwritten text-gray-700 text-lg md:text-xl leading-relaxed whitespace-pre-line">
+                <div className="font-handwritten text-ink-primary text-lg leading-relaxed whitespace-pre-line md:text-xl">
                   {letterContent.split('\n\n').map((paragraph, index) => (
                     <motion.p
                       key={index}

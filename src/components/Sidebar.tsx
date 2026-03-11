@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export type SidebarTab = "home" | "timeline" | "gallery" | "notes" | "love-meter" | "quiz" | "letter" | "dates" | "puzzle" | "share" | "stats" | "map";
 
@@ -28,17 +28,13 @@ export function Sidebar({ activeTab, onTabChange, onToggle }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isDesktop, setIsDesktop] = useState(false);
 
-  // Check if desktop
   useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024);
     checkDesktop();
     window.addEventListener("resize", checkDesktop);
     return () => window.removeEventListener("resize", checkDesktop);
   }, []);
 
-  // Notify parent of sidebar state changes
   useEffect(() => {
     onToggle?.(isOpen);
   }, [isOpen, onToggle]);
@@ -49,12 +45,12 @@ export function Sidebar({ activeTab, onTabChange, onToggle }: SidebarProps) {
 
   return (
     <>
-      {/* Toggle button - visible on all screen sizes */}
-        <motion.button
+      <motion.button
         onClick={toggleSidebar}
-        whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(255, 182, 193, 0.5)" }}
-        whileTap={{ scale: 0.95 }}
-        className={`fixed left-4 top-4 z-50 rounded-full bg-gradient-to-r from-pink-400 to-rose-400 p-3 text-white shadow-lg shadow-pink-300/40 transition-all glass-modern ${
+        whileHover={{ scale: 1.05, boxShadow: "0 12px 28px rgba(236, 72, 153, 0.25), 0 4px 12px rgba(244, 63, 94, 0.12)" }}
+        whileTap={{ scale: 0.96 }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        className={`fixed left-4 top-4 z-[100] flex min-h-[2.75rem] min-w-[2.75rem] items-center justify-center rounded-full bg-gradient-to-r from-pink-500 to-rose-500 p-3 text-white shadow-tactile transition-shadow duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-400 focus-visible:outline-offset-2 ${
           isOpen && isDesktop ? "lg:left-[19rem]" : "lg:left-4"
         }`}
         aria-label="Toggle sidebar"
@@ -75,7 +71,6 @@ export function Sidebar({ activeTab, onTabChange, onToggle }: SidebarProps) {
         </motion.svg>
       </motion.button>
 
-      {/* Sidebar */}
       <motion.aside
         initial={false}
         animate={{ 
@@ -83,7 +78,7 @@ export function Sidebar({ activeTab, onTabChange, onToggle }: SidebarProps) {
           width: isOpen ? 288 : (isDesktop ? 48 : 0)
         }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="fixed left-0 top-0 z-40 h-screen glass-modern border-r border-pink-300/40 shadow-2xl overflow-hidden"
+        className="fixed left-0 top-0 z-[90] h-screen glass-modern border-r border-pink-300/40 shadow-2xl overflow-hidden"
         style={{
           background: 'linear-gradient(180deg, rgba(255, 245, 248, 0.95) 0%, rgba(255, 238, 242, 0.95) 100%)'
         }}
@@ -95,56 +90,61 @@ export function Sidebar({ activeTab, onTabChange, onToggle }: SidebarProps) {
           transition={{ duration: 0.2 }}
           className="border-b border-pink-300/30 p-6 overflow-hidden"
         >
-          <h1 className="text-2xl font-bold text-gray-700 whitespace-nowrap modern-headline gradient-text">Our Story</h1>
-          <p className="mt-2 text-xs uppercase tracking-widest text-pink-400/70 modern-subheadline">2025</p>
+          <h1 className="text-2xl font-bold text-ink-primary whitespace-nowrap modern-headline gradient-text">Our Story</h1>
+          <p className="mt-2 text-xs uppercase tracking-widest text-pink-500/70 modern-subheadline">2025</p>
         </motion.div>
 
         {/* Navigation */}
         <nav className="mt-8 space-y-2 px-4">
-          {tabs.map((tab) => (
-            <motion.button
-              key={tab.id}
-              onClick={() => {
-                onTabChange(tab.id);
-                // Only auto-close on mobile
-                if (!isDesktop) {
-                  setIsOpen(false);
-                }
-              }}
-              whileHover={{ x: isOpen ? 4 : 0 }}
-              whileTap={{ scale: 0.98 }}
-              className={`w-full rounded-xl transition-all ${
-                isOpen ? "px-4 py-3" : "px-2 py-3 justify-center"
-              } ${
-                activeTab === tab.id
-                  ? "bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-lg shadow-pink-300/40"
-                  : "text-gray-600 hover:bg-white/80 hover:text-gray-800 border border-transparent hover:border-pink-300/40"
-              }`}
-              title={!isOpen ? tab.label : undefined}
-            >
-              <motion.div
-                className="flex items-center"
-                initial={false}
-                animate={{
-                  justifyContent: isOpen ? "flex-start" : "center",
+          {tabs.map((tab) => {
+            const isActiveTab = activeTab === tab.id;
+
+            return (
+              <motion.button
+                key={tab.id}
+                aria-pressed={isActiveTab}
+                onClick={() => {
+                  onTabChange(tab.id);
+                  if (!isDesktop) {
+                    setIsOpen(false);
+                  }
                 }}
-                style={{ gap: isOpen ? 12 : 0 }}
+                whileHover={{ x: isOpen ? 4 : 0 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className={`flex min-h-[2.75rem] w-full items-center rounded-xl transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-rose-400 focus-visible:outline-offset-1 ${
+                  isOpen ? "px-4 py-3" : "justify-center px-2 py-3"
+                } ${
+                  isActiveTab
+                    ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-tactile"
+                    : "border border-transparent text-ink-secondary hover:border-pink-300/40 hover:bg-surface-elevated/80 hover:text-ink-primary"
+                }`}
+                title={!isOpen ? tab.label : undefined}
               >
-                <span className="text-xl flex-shrink-0">{tab.icon}</span>
-                <motion.span
-                  className="font-medium whitespace-nowrap overflow-hidden"
-                  animate={{ 
-                    opacity: isOpen ? 1 : 0,
-                    width: isOpen ? "auto" : 0,
-                    marginLeft: isOpen ? 0 : -12
+                <motion.div
+                  className="flex items-center"
+                  initial={false}
+                  animate={{
+                    justifyContent: isOpen ? "flex-start" : "center",
                   }}
-                  transition={{ duration: 0.2 }}
+                  style={{ gap: isOpen ? 12 : 0 }}
                 >
-                  {tab.label}
-                </motion.span>
-              </motion.div>
-            </motion.button>
-          ))}
+                  <span className="text-xl flex-shrink-0">{tab.icon}</span>
+                  <motion.span
+                    className="font-medium whitespace-nowrap overflow-hidden"
+                    animate={{
+                      opacity: isOpen ? 1 : 0,
+                      width: isOpen ? "auto" : 0,
+                      marginLeft: isOpen ? 0 : -12,
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {tab.label}
+                  </motion.span>
+                </motion.div>
+              </motion.button>
+            );
+          })}
         </nav>
 
         {/* Decorative elements */}
@@ -167,7 +167,7 @@ export function Sidebar({ activeTab, onTabChange, onToggle }: SidebarProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-30 bg-pink-200/30 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-[85] bg-pink-200/30 backdrop-blur-sm lg:hidden"
         />
       )}
     </>

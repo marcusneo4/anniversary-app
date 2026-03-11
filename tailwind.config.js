@@ -4,6 +4,7 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      /* 60-30-10 design tokens: base (60%), secondary (30%), accent (10%) */
       colors: {
         dark: {
           DEFAULT: "#0a0a0a",
@@ -48,7 +49,33 @@ export default {
           800: "#9f1239",
           900: "#831843",
           950: "#500724"
+        },
+        /* ui-master: off-black/off-white (never pure #000 or #FFF) */
+        surface: {
+          base: "#FAFAF9",
+          secondary: "#F5F0F0",
+          tertiary: "#FEF7F7",
+          elevated: "#FFFBFB"
+        },
+        ink: {
+          primary: "#1A1A1A",
+          secondary: "#4A4A4A",
+          muted: "#6B6B6B"
         }
+      },
+      transitionTimingFunction: {
+        "snap-out": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "organic": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "ease-spring": "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+      },
+      minHeight: {
+        touch: "2.75rem",
+        "touch-lg": "3rem"
+      },
+      boxShadow: {
+        "tactile": "0 4px 14px rgba(236, 72, 153, 0.15), 0 2px 6px rgba(244, 63, 94, 0.08)",
+        "tactile-hover": "0 12px 28px rgba(236, 72, 153, 0.25), 0 4px 12px rgba(244, 63, 94, 0.12)",
+        "tactile-active": "0 2px 8px rgba(236, 72, 153, 0.2)"
       },
       fontFamily: {
         display: ["'Playfair Display'", "serif"],

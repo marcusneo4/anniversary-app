@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { monthlyTimelineData, type MonthlyTimelineEntry } from "../data/content";
 import { loadMonthlyTimeline, saveMonthlyTimeline } from "../utils/contentManager";
 import { resolvePublicAssetUrl } from "../utils/assetUrl";
@@ -15,6 +15,33 @@ export function MonthlyTimeline() {
   const [entries, setEntries] = useState<Record<number, MonthlyTimelineEntry[]>>({});
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [activeEntry, setActiveEntry] = useState<MonthlyTimelineEntry | null>(null);
+  const [lightboxImageError, setLightboxImageError] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!isLightboxOpen) {
+      return;
+    }
+
+    const { scrollY } = window;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+
+    window.scrollTo(0, 0);
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.documentElement.style.overflow = previousHtmlOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+      window.scrollTo(0, scrollY);
+    };
+  }, [isLightboxOpen]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -54,7 +81,19 @@ export function MonthlyTimeline() {
 
   const currentMonthEntries = entries[selectedMonth] || [];
 
+  const handleOpenLightbox = (entry: MonthlyTimelineEntry) => {
+    setLightboxImageError(false);
+    setActiveEntry(entry);
+    setIsLightboxOpen(true);
+  };
+
+  const handleCloseLightbox = () => {
+    setIsLightboxOpen(false);
+    setTimeout(() => setActiveEntry(null), 250);
+  };
+
   return (
+    <>
     <motion.section
       ref={sectionRef}
       initial={{ opacity: 0 }}
@@ -134,13 +173,14 @@ export function MonthlyTimeline() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-rose-100 transition-all hover:scale-[1.02] hover:shadow-xl"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-rose-100 transition-all hover:scale-[1.02] hover:shadow-xl"
+                onClick={() => handleOpenLightbox(entry)}
               >
                 <div className="relative h-64 overflow-hidden bg-gradient-to-br from-rose-100 to-rose-200">
                   {entry.type === "video" ? (
                     <video
                       src={resolvePublicAssetUrl(entry.image)}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full object-cover object-center"
                       loop
                       muted
                       playsInline
@@ -151,7 +191,7 @@ export function MonthlyTimeline() {
                     <img
                       src={resolvePublicAssetUrl(entry.image)}
                       alt={entry.alt}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                       onError={(e) => {
                         const target = e.currentTarget as HTMLImageElement;
@@ -180,7 +220,7 @@ export function MonthlyTimeline() {
                 </div>
                 <div className="p-6">
                   {entry.date && (
-                    <p className="text-xs uppercase tracking-wider text-rose-400 mb-2">
+                    <p className="mb-2 text-xs uppercase tracking-wider text-rose-400">
                       {entry.date}
                     </p>
                   )}
@@ -195,6 +235,72 @@ export function MonthlyTimeline() {
         )}
       </motion.div>
     </motion.section>
+    {typeof document !== "undefined" &&
+      createPortal(
+        <AnimatePresence mode="wait">
+          {isLightboxOpen && activeEntry && (
+            <motion.div
+              key={`lightbox-${activeEntry.id}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
+              onClick={handleCloseLightbox}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(event) => event.stopPropagation()}
+                className="relative max-h-[90vh] w-full max-w-5xl flex flex-col items-center justify-center"
+              >
+                <button
+                  type="button"
+                  onClick={handleCloseLightbox}
+                  className="absolute -top-12 right-0 rounded-full bg-white/20 p-2 text-white transition hover:bg-white/30"
+                  aria-label="Close"
+                >
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+                {activeEntry.type === "video" ? (
+                  <video
+                    key={`video-${activeEntry.id}`}
+                    src={resolvePublicAssetUrl(activeEntry.image)}
+                    className="max-h-[90vh] w-auto max-w-full rounded-2xl object-contain"
+                    controls
+                    autoPlay
+                  />
+                ) : (
+                  <div className="relative flex min-h-[200px] min-w-[200px] items-center justify-center">
+                    <img
+                      key={`img-${activeEntry.id}`}
+                      src={resolvePublicAssetUrl(activeEntry.image)}
+                      alt={activeEntry.alt}
+                      className={`max-h-[85vh] w-auto max-w-full rounded-2xl object-contain ${lightboxImageError ? "hidden" : ""}`}
+                      loading="eager"
+                      decoding="async"
+                      onError={() => setLightboxImageError(true)}
+                    />
+                    {lightboxImageError && (
+                      <div className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-white/10 px-8 py-6 backdrop-blur-sm">
+                        <p className="text-white">Image could not be loaded</p>
+                        <p className="text-sm text-white/70">Check that the file exists in public/media/photos or re-upload via Admin</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="mt-4 rounded-2xl bg-white/10 p-4 text-center backdrop-blur-sm max-w-full">
+                  <p className="text-lg text-white">{activeEntry.caption}</p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
 }
 
