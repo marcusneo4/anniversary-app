@@ -7,12 +7,12 @@ export type HeroContent = {
 };
 
 export const heroContent: HeroContent = {
-  heading: "365 days of us",
-  subheading: "Every laugh, quiet moment, and spontaneous adventure brought us here.",
+  heading: "Two years of us",
+  subheading: "There is a letter in here for you. After that, 2025, month by month.",
   dedication:
     "To Shanna, my favorite person: thank you for choosing me in the loud, in the quiet, and in every in-between. - Marcus",
-  ctaPrimary: "Relive our story",
-  ctaSecondary: "Unlock the surprise"
+  ctaPrimary: "Open the letter",
+  ctaSecondary: "Skip to the photos"
 };
 
 export type TimelineMilestone = {
@@ -23,48 +23,8 @@ export type TimelineMilestone = {
   description: string;
 };
 
-export const timelineMilestones: TimelineMilestone[] = [
-  {
-    id: 1,
-    title: "First Date • Latte & Laughs",
-    date: "05 Feb 2024",
-    location: "Knots & Pans",
-    description:
-      "We tried to play it cool but laughed too loudly over crooked latte art. That awkward high-five? Still adorable."
-  },
-  {
-    id: 2,
-    title: "Secret Beach Picnic",
-    date: "27 Apr 2024",
-    location: "Tanjong Beach",
-    description:
-      "Sunset oranges, a playlist on shuffle, and you insisting the clouds looked like marshmallows. I believed you."
-  },
-  {
-    id: 3,
-    title: "Rainy Day Shelter",
-    date: "13 Jul 2024",
-    location: "Bus stop #27",
-    description:
-      "The storm cancelled our plans, so we turned a bus stop into our living room, complete with playlists and confessions."
-  },
-  {
-    id: 4,
-    title: "Passport Stamps & Sushi",
-    date: "23 Sep 2024",
-    location: "Osaka",
-    description:
-      "You taught me that travel is less about destinations and more about who laughs with you when you get lost."
-  },
-  {
-    id: 5,
-    title: "Our First Anniversary",
-    date: "14 Dec 2025",
-    location: "Our kitchen",
-    description:
-      "One year together, Shanna. We burnt dessert, improvised a dance floor, and talked about futures like they were already happening."
-  }
-];
+// The sample milestones were removed. Add real ones here if you want them back.
+export const timelineMilestones: TimelineMilestone[] = [];
 
 export type GalleryMoment = {
   id: number;
@@ -168,21 +128,27 @@ export type PuzzleClue = {
 export const puzzleClues: PuzzleClue[] = [
   {
     id: 1,
-    hint: "Count the letters of the word we couldn’t stop saying on date one.",
+    hint: "The page with five handwritten things on it. Take the first letter of its name.",
     answerFragment: "L",
-    location: "Hero dedication"
+    location: "The menu"
   },
   {
     id: 2,
-    hint: "Find the month hidden in the Osakan adventure and take its first letter.",
+    hint: "Count ten months into 2025. Take that month's first letter.",
     answerFragment: "O",
-    location: "Timeline card"
+    location: "The photos"
   },
   {
     id: 3,
-    hint: "Look for the gallery caption that mentions a playlist and grab the first vowel.",
+    hint: "In my letter, right after our first CNY: our first ___'s day. First letter.",
     answerFragment: "V",
-    location: "Gallery caption"
+    location: "The letter"
+  },
+  {
+    id: 4,
+    hint: "The continent that felt like a fever dream. First letter.",
+    answerFragment: "E",
+    location: "The letter"
   }
 ];
 
@@ -197,7 +163,7 @@ export type ClosingToastContent = {
 export const closingToast: ClosingToastContent = {
   headline: "Here's to chapter two",
   body: "If the first year felt like a favorite song, imagine what the remix will do. Let's keep writing the lyrics, one surprise at a time.",
-  button: "Play this"
+  button: "Play it on YouTube"
 };
 
 export type MonthlyTimelineEntry = {
@@ -363,3 +329,40 @@ export const monthlyTimelineData: Record<number, MonthlyTimelineEntry[]> = {
   11: [] // December
 };
 
+
+/** Dates the whole site counts from. Change them here only. */
+export const story = {
+  /** Day counter starts here (YYYY-MM-DD). */
+  togetherSince: "2024-09-21",
+  /** Anniversary month and day, used for the countdown. */
+  anniversaryMonth: 12,
+  anniversaryDay: 14,
+  /** Where the button goes after the puzzle is solved. */
+  surpriseUrl:
+    "https://www.youtube.com/watch?v=ULYksmjBwzY&list=PLIwKz7a1HOMAN0YXSJhlvZecCjnN4JYoQ&index=18"
+};
+
+/** The typed letter that opens the site. Blank lines separate paragraphs. */
+export const openingLetter = `HELLOOO to the sweetest and hottest GF IN THE ENTIRE UNIVERSE.
+
+WOW i really can't believe it's been a year already but i still feel excited meeting you every single time. looking back at this year we really been thru ALOT TOGETHER. our first CNY together, first Valentine's dayy, first OVERSEAS TRIP, first LDR.
+
+tbh i promised my self i would never do LDR with anyone. but with you i just felt that you were someone special and really worth the LDR and im really happy that things worked out sooo welll and we became even closer.
+
+i tot if we lived together in Europe i would see another side of you that would be very unreasonable and mean? but that was the opposite. u were so easy to travel with and u LIKED ALL THE SAME FOOD AS ME and u weren't calculative or SHELTERED/Princess.
+
+and ik
+
+and Europe just felt like a fever dream it felt so long ago but u made me like travelling again. and everyday we still had so many things to talk about even till now and im very grateful every single day and wont take this r/s for granted.
+
+and i was sooo sooo happy when u came back! i tot you might change after Europe like some ppl do LOOL BUT NAHH V GOOD.
+
+and we also celebrated your 23rd birthday together I RLY HOPED U LIKED EVERYTHING cus i was planning everything out and in the future I hope to come up with interesting celebrations.
+
+even though birthdays don't mean much to me. ik it really means alot to u n that's all that matters for me. seeing u smile every day
+
+the later half of 2025 was very busy for both of us but we still tried to meet twice a week. n i was always eager to head over to RP Mrt just to have lunch with u n i never felt that it was troublesome.
+
+the day u got ur dream internship also made me very happy n the support u gave me throughout my dbs application gave me the motivation to work hard for it!!
+
+i just want to say im genuinely serious about you and i do see a long future with you in it ❤️`;

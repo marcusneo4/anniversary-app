@@ -1,39 +1,27 @@
 import { useMemo } from "react";
 
+/** For Marcus, inside edit mode: the link and a QR code to hand over on the day. */
 export function ShareCard() {
   const shareUrl = useMemo(() => {
-    if (typeof window !== "undefined") {
-      return window.location.origin;
-    }
-    return "https://your-anniversary-site.com";
+    if (typeof window === "undefined") return "";
+    return `${window.location.origin}${window.location.pathname}`;
   }, []);
 
-  const qrSrc = `https://quickchart.io/qr?text=${encodeURIComponent(shareUrl)}&size=200&light=fff7fa&dark=7a1e46`;
+  const qrSrc = `https://quickchart.io/qr?text=${encodeURIComponent(shareUrl)}&size=200&light=ffffff&dark=3b1730`;
 
   return (
-    <section className="rounded-3xl bg-rose-50/90 p-8 shadow-2xl ring-1 ring-rose-100">
-      <div className="flex flex-col gap-6 md:flex-row md:items-center">
-        <div className="flex-1 space-y-3 text-rose-800">
-          <p className="text-sm uppercase tracking-[0.3em] text-rose-400">Share the surprise</p>
-          <h2 className="font-display text-3xl text-rose-900">Ready for our anniversary night</h2>
-          <p>
-            Scan or send this link on the day, queue the playlist, and keep the puzzle hint cards
-            handy. The QR works great for a printed card or in the restaurant menu.
-          </p>
-          <ul className="list-disc space-y-2 pl-6 text-sm text-rose-700">
-            <li>Open the site on your phone ahead of time to cache the assets.</li>
-            <li>Use screen brightness 80%+ so the colors glow in candlelight.</li>
-            <li>Toggle the music before handing over your phone.</li>
-          </ul>
-        </div>
-        <div className="mx-auto flex flex-col items-center gap-3 rounded-3xl bg-white p-6 shadow-lg ring-1 ring-rose-100">
-          <img src={qrSrc} alt="QR code linking to the anniversary microsite" className="h-48 w-48" />
-          <code className="text-xs text-rose-500">{shareUrl}</code>
-        </div>
+    <div className="flex flex-col gap-6 md:flex-row md:items-center">
+      <div className="flex-1 space-y-3">
+        <h3 className="font-display text-2xl">Hand it over on the day</h3>
+        <p>Send her this link, or print the QR code on a card.</p>
+        <ul className="list-disc space-y-2 pl-6 text-sm">
+          <li>Open the site on her phone once beforehand so the photos load fast.</li>
+          <li>The music only starts when she taps Play music.</li>
+          <li>Edit mode is Ctrl+K. She won't see a button for it.</li>
+        </ul>
+        <code className="block break-all text-xs">{shareUrl}</code>
       </div>
-    </section>
+      <img src={qrSrc} alt="QR code for the site link" className="mx-auto h-48 w-48 border border-rose-100 bg-white p-2" />
+    </div>
   );
 }
-
-
-

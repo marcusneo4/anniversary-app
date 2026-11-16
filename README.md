@@ -2,16 +2,14 @@
 
 Romantic single-page React experience that walks through your first-year milestones, photo memories, heartfelt notes, and an interactive "Unlock our future" puzzle.
 
-## 🌟 Features
+## What's in it
 
-- **Interactive Timeline**: Beautiful monthly timeline of your relationship milestones
-- **Memory Gallery**: Photo gallery with your special moments
-- **Love Notes**: Heartfelt messages and memories
-- **Interactive Map**: Track countries you've visited together with region-based selection
-- **Puzzle Unlock**: Interactive puzzle to unlock your future together
-- **Relationship Stats**: Days, hours, and minutes together
-- **Love Meter**: Fun compatibility quiz
-- **And much more!**
+- **Our year**: an envelope that opens into the letter, then 2025 month by month, then a four-letter puzzle that unlocks a note
+- **Letters**: the handwritten cards and letters, with zoom
+- **Places**: a world map with flight paths from home and one stamp per country. The map outlines are generated: see `scripts/build-world-map.mjs`
+- **Edit mode**: press `Ctrl+K` (`Cmd+K` on Mac). There is no visible button, on purpose.
+
+Colours and fonts live in `tailwind.config.js`. Dates (day counter, anniversary) live in `story` at the bottom of `src/data/content.ts`. Home on the map is `HOME` in `src/data/countries.ts`.
 
 ## 🚀 Getting Started
 
@@ -33,10 +31,10 @@ Then visit `http://localhost:5174`.
 
 ## 📝 Customizing Content
 
-- Update copy, timeline events, gallery captions, puzzle clues, and closing toast in `src/data/content.ts`.
-- Drop your own images into `public/assets/gallery` and match their filenames to the `image` fields.
-- The celebratory note that appears after the puzzle is solved lives in `ClosingToast`.
-- To change the background music, swap the `SONG_URL` constant inside `AmbientAudioToggle.tsx`.
+- Update the heading, the opening letter, photo captions, puzzle clues and the closing note in `src/data/content.ts`.
+- Drop photos into `public/media/photos/<Month>` and add them to `monthlyTimelineData`.
+- The note that appears after the puzzle is solved is `closingToast` in the same file.
+- To change the background music, swap the `SONG_URL` constant inside `MusicToggle.tsx`.
 
 ## 🌐 Deployment
 
