@@ -7,8 +7,8 @@ export default defineConfig({
   server: {
     port: 5174
   },
-  // Base path for GitHub Pages - update this to your repository name
-  base: process.env.NODE_ENV === 'production' ? '/anniversary-app/' : '/',
+  // Vercel serves the site from the root. GitHub Pages serves it under /<repo-name>/.
+  base: process.env.VERCEL ? '/' : process.env.NODE_ENV === 'production' ? '/anniversary-app/' : '/',
 });
 
 
