@@ -31,6 +31,7 @@ import {
 } from "../utils/contentManager";
 import { convertImageToBase64 } from "../utils/imageUtils";
 import { resolvePublicAssetUrl } from "../utils/assetUrl";
+import { ShareCard } from "./ShareCard";
 
 type AdminPanelProps = {
   isOpen: boolean;
@@ -38,7 +39,7 @@ type AdminPanelProps = {
   onContentUpdate: () => void;
 };
 
-type Tab = "hero" | "gallery" | "timeline" | "monthly" | "notes" | "closing";
+type Tab = "hero" | "gallery" | "timeline" | "monthly" | "notes" | "closing" | "share";
 
 export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<Tab>("hero");
@@ -208,7 +209,7 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
 
           {/* Tabs */}
           <div className="flex border-b border-rose-100 bg-white overflow-x-auto">
-            {(["hero", "gallery", "timeline", "monthly", "notes", "closing"] as Tab[]).map((tab) => (
+            {(["hero", "monthly", "closing", "share"] as Tab[]).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -218,7 +219,7 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
                     : "text-rose-600 hover:bg-rose-50"
                 }`}
               >
-                {tab === "monthly" ? "Monthly Timeline" : tab}
+                {tab === "hero" ? "Opening" : tab === "monthly" ? "Photos by month" : tab === "closing" ? "Surprise note" : "Share"}
               </button>
             ))}
           </div>
@@ -716,6 +717,8 @@ export function AdminPanel({ isOpen, onClose, onContentUpdate }: AdminPanelProps
                 ))}
               </div>
             )}
+
+            {activeTab === "share" && <ShareCard />}
 
             {activeTab === "closing" && (
               <div className="space-y-4">
